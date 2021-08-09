@@ -1,0 +1,3 @@
+* To prevent repeat code, we build this lib.
+
+A better name, like opencv, easygui, we need a simple name.
