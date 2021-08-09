@@ -19,6 +19,7 @@ add_executable(
 target_link_libraries(
         test_util_window
         gtest_main
+        easybot
 )
 
 include(GoogleTest)
