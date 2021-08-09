@@ -8,3 +8,13 @@ HWND eb::findWindow(std::string processName, std::string windowName) {
     return NULL;
 }
 
+/**
+ * Strange, I remember I have write this method once?
+ * @param processName
+ * @return
+ */
+int eb::findProcessId(const std::string &processName) {
+
+    return 0;
+}
+
