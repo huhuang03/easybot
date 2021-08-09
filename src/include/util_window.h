@@ -8,6 +8,13 @@
 #include <string>
 
 namespace eb {
-HWND findWindow(std::string processName, std::string windowName);
+    /**
+     * Find first window match the processName and windowName exactly
+     * Caller close the resource.
+     * @param processName the processName
+     * @param windowName the windowName
+     * @return nullptr if not find.
+     */
+    HWND findWindow(std::string processName, std::string windowName);
 }
 #endif //EASYBOT_UTIL_WINDOW_H
