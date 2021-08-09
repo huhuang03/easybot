@@ -15,8 +15,8 @@ namespace eb {
      * @param windowName the windowName
      * @return nullptr if not find.
      */
-    HWND findWindow(std::string processName, std::string windowName);
+    HWND findWindow(const std::string& processName, std::string windowName);
 
-    int findProcessId(const std::string &processName);
+    DWORD findProcessId(const std::string &processName);
 }
 #endif //EASYBOT_UTIL_WINDOW_H
