@@ -4,6 +4,8 @@
 
 #include "include/util_window.h"
 #include <TlHelp32.h>
+#include <iostream>
+
 
 static struct ParamEnumFindWindow {
     DWORD processId;
@@ -18,6 +20,12 @@ static BOOL enumFindWindow(HWND hwnd, LPARAM param) {
     GetWindowText(hwnd, (LPSTR)&title, 1023);
     DWORD processId;
     GetWindowThreadProcessId(hwnd, &processId);
+    if (config->processId == processId) {
+        std::cout << "find the process window" << std::endl;
+        // strange, we are all utf-8 encoding.
+        std::cout << "window: " << title << std::endl;
+        std::cout << "compare: " << *config->windowName << std::endl;
+    }
     if (config->processId == processId && title == *config->windowName) {
         *config->hwnd = hwnd;
         return false;
@@ -42,6 +50,7 @@ HWND eb::findWindow(const std::string& processName, std::string windowName) {
             // ok, we find the process
             // but how can we get the window?
             HWND rst;
+            std::cout << "process: " << pe.th32ProcessID << std::endl;
             struct ParamEnumFindWindow param {
                 pe.th32ProcessID,
                 &windowName,
