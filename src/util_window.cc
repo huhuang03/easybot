@@ -24,9 +24,10 @@ static BOOL enumFindWindow(HWND hwnd, LPARAM param) {
 
     if (config->processId == processId
         && ((title == *config->windowName) || (eb::gbk2utf8(title) == *config->windowName))) {
-        printf("find the win!!");
+        printf("find the win!! %p\n", hwnd);
+        // how to let the window open?
         *config->hwnd = hwnd;
-        return false;
+        return true;
     }
     return true;
 }
@@ -43,12 +44,11 @@ HWND eb::findWindow(const std::string& processName, std::string windowName) {
         return nullptr;
     }
 
+    HWND rst = nullptr;
     do {
         if (processName == pe.szExeFile) {
             // ok, we find the process
             // but how can we get the window?
-            HWND rst;
-            std::cout << "process: " << pe.th32ProcessID << std::endl;
             struct ParamEnumFindWindow param {
                 pe.th32ProcessID,
                 &windowName,
@@ -59,7 +59,7 @@ HWND eb::findWindow(const std::string& processName, std::string windowName) {
     } while (Process32Next(thSnap, &pe));
 
     CloseHandle(thSnap);
-    return nullptr;
+    return rst;
 }
 
 /**
