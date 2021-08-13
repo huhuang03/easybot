@@ -9,7 +9,8 @@ target_include_directories(easybot PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOUR
 install(TARGETS easybot DESTINATION lib EXPORT easybotTargets)
 install(EXPORT easybotTargets FILE easybotTargets.cmake DESTINATION lib/cmake/easybot)
 # can this emmit?
-#install(FILES include/util_string.h include/util_window.h DESTINATION include)
+# how to let cmakeTargets see this include?
+install(DIRECTORY include/easybot DESTINATION include)
 
 include(CMakePackageConfigHelpers)
 # generate the config file that is includes the exports
