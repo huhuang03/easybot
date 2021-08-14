@@ -17,17 +17,16 @@ static struct ParamEnumFindWindow {
 static BOOL enumFindWindow(HWND hwnd, LPARAM param) {
     // hwo to do?
     char title[1024];
-    ParamEnumFindWindow* config = (ParamEnumFindWindow*)param;
+    auto* config = (ParamEnumFindWindow*)param;
     GetWindowText(hwnd, (LPSTR)&title, 1023);
     DWORD processId;
     GetWindowThreadProcessId(hwnd, &processId);
 
     if (config->processId == processId
         && ((title == *config->windowName) || (eb::gbk2utf8(title) == *config->windowName))) {
-        printf("find the win!! %p\n", hwnd);
         // how to let the window open?
         *config->hwnd = hwnd;
-        return true;
+        return false;
     }
     return true;
 }
@@ -44,9 +43,11 @@ HWND eb::findWindow(const std::string& processName, std::string windowName) {
         return nullptr;
     }
 
+    const bool ignoreName= processName.empty();
+
     HWND rst = nullptr;
     do {
-        if (processName == pe.szExeFile) {
+        if (ignoreName || processName == pe.szExeFile) {
             // ok, we find the process
             // but how can we get the window?
             struct ParamEnumFindWindow param {
@@ -88,5 +89,9 @@ DWORD eb::findProcessId(const std::string &processName) {
 
     CloseHandle(thSnap);
     return 0;
+}
+
+HWND eb::findWindow(const std::string &windowName) {
+    return eb::findWindow("", windowName);
 }
 

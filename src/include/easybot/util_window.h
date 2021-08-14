@@ -8,10 +8,12 @@
 #include <string>
 
 namespace eb {
+    HWND findWindow(const std::string &windowName);
+
     /**
      * Find first window match the processName and windowName exactly
      * Caller close the resource.
-     * @param processName the processName
+     * @param processName the processName, pass "" will search for all process.
      * @param windowName the windowName
      * @return nullptr if not find.
      */

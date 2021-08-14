@@ -4,7 +4,6 @@
 
 #include <easybot/util_string.h>
 #include <Windows.h>
-#include <iostream>
 
 void eb::printAsHex(const std::string &str) {
     const char* c = str.data();
@@ -26,13 +25,7 @@ std::string eb::utf82gbk(const std::string &src) {
 }
 
 std::string eb::gbk2utf8(const char *src) {
-    // you can't handle space?
-//    std::cout << "begin convert" << std::endl;
-//    eb::printAsHex(src);
-    // return the wchar_t len.
     int len = MultiByteToWideChar(CP_ACP, 0, src, -1, nullptr, 0);
-//    std::cout << "strlen: " << strlen(src) << ", len: " << len << std::endl;
-    // wrong len
     auto wstr = new wchar_t[len]{0};
     MultiByteToWideChar(CP_ACP, 0, src, -1, wstr, len);
 
