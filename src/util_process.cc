@@ -58,7 +58,7 @@ DWORD eb::getBaseAddr(DWORD processId, const std::string &moduleName) {
     do {
         if (moduleName == me.szModule) {
             CloseHandle(thSnap);
-            rst = me.modBaseSize;
+            rst = reinterpret_cast<DWORD>(me.modBaseAddr);
             break;
         }
     } while (Module32Next(thSnap, &me));
