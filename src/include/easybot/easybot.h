@@ -8,4 +8,5 @@
 #include "./util_keyboard.h"
 #include "./util_string.h"
 #include "./util_window.h"
+#include "./util_process.h"
 #endif //EASYBOT_EASYBOT_H

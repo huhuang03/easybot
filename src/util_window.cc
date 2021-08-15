@@ -4,7 +4,6 @@
 
 #include "easybot/util_window.h"
 #include <TlHelp32.h>
-#include <iostream>
 #include <easybot/util_string.h>
 
 
@@ -61,34 +60,6 @@ HWND eb::findWindow(const std::string& processName, std::string windowName) {
 
     CloseHandle(thSnap);
     return rst;
-}
-
-/**
- * Strange, I remember I have write this method once?
- * @param processName
- * @return
- */
-DWORD eb::findProcessId(const std::string &processName) {
-    auto thSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if (!thSnap) {
-        return 0;
-    }
-    PROCESSENTRY32 pe;
-
-    // need close pe?
-    if (!Process32Next(thSnap, &pe)) {
-        return 0;
-    }
-
-    do {
-        if (processName == pe.szExeFile) {
-            CloseHandle(thSnap);
-            return pe.th32ProcessID;
-        }
-    } while (Process32Next(thSnap, &pe));
-
-    CloseHandle(thSnap);
-    return 0;
 }
 
 HWND eb::findWindow(const std::string &windowName) {

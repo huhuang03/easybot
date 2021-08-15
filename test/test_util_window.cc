@@ -2,6 +2,7 @@
 // Created by huhua on 2021/8/9.
 //
 #include <gtest/gtest.h>
+#include <easybot/util_process.h>
 #include <easybot/util_window.h>
 #include <iostream>
 
@@ -9,6 +10,7 @@ TEST(UtilWindow, getProcessId) {
     DWORD id = eb::findProcessId("svchost.exe");
     ASSERT_TRUE(id > 0);
 }
+
 
 void startNotepad(PROCESS_INFORMATION *ppi) {
     STARTUPINFO si;
@@ -33,7 +35,6 @@ void startNotepad(PROCESS_INFORMATION *ppi) {
     WaitForSingleObject(ppi->hProcess, 1000);
 }
 
-
 TEST(UtilWindow, findWindow) {
     PROCESS_INFORMATION pi;
     ZeroMemory( &pi, sizeof(pi) );
@@ -42,5 +43,20 @@ TEST(UtilWindow, findWindow) {
     HWND window = eb::findWindow("notepad.exe", "无标题 - 记事本");
     std::cout << "window: " << window << std::endl;
     ASSERT_TRUE(window != nullptr);
+    TerminateProcess(pi.hProcess, 0);
+}
+
+TEST(UtilProcess, getModuleBase) {
+    PROCESS_INFORMATION pi;
+    ZeroMemory( &pi, sizeof(pi) );
+    startNotepad(&pi);
+
+    auto pid = eb::findProcessId("notepad.exe");
+    ASSERT_TRUE(pid > 0);
+    auto baseAddr = eb::getBaseAddr(pid, "notepad.exe");
+    std::cout << "baseAddr: " << baseAddr << std::endl;
+    ASSERT_GT(baseAddr, 0);
+
+
     TerminateProcess(pi.hProcess, 0);
 }
