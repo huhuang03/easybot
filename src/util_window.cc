@@ -13,7 +13,7 @@ static struct ParamEnumFindWindow {
     HWND *hwnd = nullptr;
 };
 
-static CALLBACK BOOL enumFindWindow(HWND hwnd, LPARAM param) {
+static BOOL CALLBACK enumFindWindow(HWND hwnd, LPARAM param) {
     // hwo to do?
     char title[1024];
     auto* config = (ParamEnumFindWindow*)param;
@@ -25,9 +25,9 @@ static CALLBACK BOOL enumFindWindow(HWND hwnd, LPARAM param) {
         && ((title == *config->windowName) || (eb::gbk2utf8(title) == *config->windowName))) {
         // how to let the window open?
         *config->hwnd = hwnd;
-        return false;
+        return FALSE;
     }
-    return true;
+    return TRUE;
 }
 
 HWND eb::findWindow(const std::string& processName, std::string windowName) {
