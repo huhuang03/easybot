@@ -13,7 +13,7 @@ static struct ParamEnumFindWindow {
     HWND *hwnd = nullptr;
 };
 
-static BOOL enumFindWindow(HWND hwnd, LPARAM param) {
+static CALLBACK BOOL enumFindWindow(HWND hwnd, LPARAM param) {
     // hwo to do?
     char title[1024];
     auto* config = (ParamEnumFindWindow*)param;
