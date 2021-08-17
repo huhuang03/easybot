@@ -39,8 +39,8 @@ static PROCESS_INFORMATION startNotepad() {
     return pi;
 }
 
-static void stopNotepad(DWORD pid) {
-
+static void stopNotepad(PROCESS_INFORMATION &pi) {
+    TerminateProcess(pi.hProcess, 0);
 }
 
 
@@ -71,6 +71,5 @@ TEST(UtilProcess, getModuleBase) {
     std::cout << "baseAddr: " << baseAddr << std::endl;
     ASSERT_GT(baseAddr, 0);
 
-
-    TerminateProcess(pi.hProcess, 0);
+    stopNotepad(pi);
 }
