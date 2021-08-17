@@ -5,6 +5,7 @@
 #ifndef EASYBOT_UTIL_WINDOW_H
 #define EASYBOT_UTIL_WINDOW_H
 #include <Windows.h>
+#include <opencv2/opencv.hpp>
 #include <string>
 
 namespace eb {
@@ -18,5 +19,7 @@ namespace eb {
      * @return nullptr if not find.
      */
     HWND findWindow(const std::string& processName, std::string windowName);
+
+    cv::Mat windowCap(HWND hwnd);
 }
 #endif //EASYBOT_UTIL_WINDOW_H

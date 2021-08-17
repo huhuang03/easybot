@@ -73,3 +73,16 @@ TEST(UtilProcess, getModuleBase) {
 
     stopNotepad(pi);
 }
+
+TEST(UtilWindow, capture) {
+    auto pi = startNotepad();
+    // ok, can we start the notepad?
+    // 黑屏，明天看看问题吧。
+    HWND window = eb::findWindow("Zuma Deluxe 1.0");
+    std::cout << "window: " << window << std::endl;
+    auto mat = eb::windowCap(window);
+    cv::imshow("img", mat);
+    cv::waitKey(0);
+    ASSERT_TRUE(window != nullptr);
+    TerminateProcess(pi.hProcess, 0);
+}

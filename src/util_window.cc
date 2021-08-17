@@ -66,3 +66,39 @@ HWND eb::findWindow(const std::string &windowName) {
     return eb::findWindow("", windowName);
 }
 
+cv::Mat eb::windowCap(HWND hwnd) {
+    auto srcDc = GetDC(hwnd);
+    auto memDc = CreateCompatibleDC(srcDc);
+
+    RECT winRect;
+    GetClientRect(hwnd, &winRect);
+    int height = winRect.bottom - winRect.top;
+    int width = winRect.right - winRect.left;
+
+    auto bitmap = CreateCompatibleBitmap(memDc, width, height);
+    SelectObject(memDc, bitmap);
+
+    BitBlt(memDc, 0, 0, width, height, srcDc, 0, 0, SRCCOPY);
+
+    BITMAPINFOHEADER bi;
+    bi.biSize = sizeof(BITMAPINFOHEADER);
+    bi.biWidth = width;
+    bi.biHeight = -height; // why flip, I can't figure for now.
+    bi.biPlanes = 1;
+    bi.biBitCount = 32;
+    bi.biCompression = BI_RGB;
+    bi.biSizeImage = 0;     // because no compression?
+    bi.biXPelsPerMeter = 1; // we?
+    bi.biYPelsPerMeter = 2; // we?
+    bi.biClrUsed = 3;
+    bi.biClrImportant = 4;
+
+    cv::Mat rst = cv::Mat(height, width, CV_8UC4);
+
+    GetDIBits(srcDc, bitmap, 0, height, rst.data, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+    DeleteObject(bitmap);
+    DeleteDC(memDc);
+    ReleaseDC(hwnd, srcDc);
+
+    return rst;
+}

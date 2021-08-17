@@ -1,8 +1,13 @@
 FILE(GLOB_RECURSE SRC *.h *.hpp *.cpp *.cc *.c)
 
 add_library(easybot ${SRC})
+
 # not work?
 target_include_directories(easybot PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+
+find_package(OpenCV REQUIRED)
+target_include_directories(easybot PUBLIC ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(easybot ${OpenCV_LIBS})
 
 # install target
 install(TARGETS easybot DESTINATION lib EXPORT easybotTargets)
