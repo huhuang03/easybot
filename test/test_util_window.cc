@@ -6,13 +6,7 @@
 #include <easybot/util_window.h>
 #include <iostream>
 
-TEST(UtilWindow, getProcessId) {
-    DWORD id = eb::findProcessId("svchost.exe");
-    ASSERT_TRUE(id > 0);
-}
-
-
-void startNotepad(PROCESS_INFORMATION *ppi) {
+static void startNotepad(PROCESS_INFORMATION *ppi) {
     STARTUPINFO si;
     si.cb = sizeof (si);
     ZeroMemory( &si, sizeof(si) );
@@ -27,13 +21,35 @@ void startNotepad(PROCESS_INFORMATION *ppi) {
             nullptr,
             &si,
             ppi
-            );
+    );
     std::cout << "createRst: " << createRst << std::endl;
     if (!createRst) {
         std::cout << "code: " << GetLastError() << std::endl;
     }
     WaitForSingleObject(ppi->hProcess, 1000);
 }
+
+/**
+ * let use the compiler sugar.
+ */
+static PROCESS_INFORMATION startNotepad() {
+    PROCESS_INFORMATION pi;
+    ZeroMemory( &pi, sizeof(pi) );
+    startNotepad(&pi);
+    return pi;
+}
+
+static void stopNotepad(DWORD pid) {
+
+}
+
+
+TEST(UtilWindow, getProcessId) {
+    DWORD id = eb::findProcessId("svchost.exe");
+    ASSERT_TRUE(id > 0);
+}
+
+
 
 TEST(UtilWindow, findWindow) {
     PROCESS_INFORMATION pi;
@@ -47,9 +63,7 @@ TEST(UtilWindow, findWindow) {
 }
 
 TEST(UtilProcess, getModuleBase) {
-    PROCESS_INFORMATION pi;
-    ZeroMemory( &pi, sizeof(pi) );
-    startNotepad(&pi);
+    auto pi = startNotepad();
 
     auto pid = eb::findProcessId("notepad.exe");
     ASSERT_TRUE(pid > 0);
