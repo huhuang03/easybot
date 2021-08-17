@@ -10,7 +10,7 @@ project(easybot)
 
 message("CMAKE_GENERATOR: ${CMAKE_GENERATOR}")
 message("CMAKE_SIZEOF_VOID_P: ${CMAKE_SIZEOF_VOID_P}")
-message("arch_hint: ${arch_hint}")
+message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 # but why you default to install E:/Program Files?
 
 add_subdirectory(src)

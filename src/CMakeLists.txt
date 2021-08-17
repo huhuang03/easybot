@@ -1,7 +1,6 @@
 FILE(GLOB_RECURSE SRC *.h *.hpp *.cpp *.cc *.c)
 
 add_library(easybot ${SRC})
-message(${CMAKE_CURRENT_SOURCE_DIR})
 # not work?
 target_include_directories(easybot PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
