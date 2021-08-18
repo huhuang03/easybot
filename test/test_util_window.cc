@@ -79,9 +79,10 @@ TEST(UtilWindow, capture) {
     auto pi = startNotepad();
     // ok, can we start the notepad?
     // 黑屏，明天看看问题吧。
-    HWND window = eb::findWindow("notepad.exe");
+    HWND window = eb::findWindow("无标题 - 记事本");
     eb::inputKey('A');
     eb::inputKey('B');
+    ASSERT_TRUE(window != nullptr);
     std::cout << "window: " << window << std::endl;
     auto mat = eb::windowCap(window);
     cv::imshow("img", mat);
