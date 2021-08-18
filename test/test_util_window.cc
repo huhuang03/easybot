@@ -82,10 +82,12 @@ TEST(UtilWindow, capture) {
     HWND window = eb::findWindow("无标题 - 记事本");
     eb::inputKey('A');
     eb::inputKey('B');
+    Sleep(500);
     ASSERT_TRUE(window != nullptr);
-    std::cout << "window: " << window << std::endl;
     auto mat = eb::windowCap(window);
-    cv::imshow("img", mat);
+    // how to assert you?
+    auto lastColor = mat.at<cv::Vec4b>(mat.rows - 1, mat.cols - 1);
+    ASSERT_TRUE(lastColor[0] != 255 && lastColor[0] != 0);
     cv::waitKey(0);
     ASSERT_TRUE(window != nullptr);
     TerminateProcess(pi.hProcess, 0);
