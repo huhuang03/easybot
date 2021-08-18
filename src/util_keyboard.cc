@@ -28,5 +28,4 @@ void eb::inputKey(char c) {
     input.ki.wVk = VkKeyScanA(c);
     input.ki.dwFlags = KEYEVENTF_KEYUP;
     SendInput(1, &input, sizeof input);
-
 }

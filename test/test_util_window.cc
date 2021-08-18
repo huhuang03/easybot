@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <easybot/util_process.h>
 #include <easybot/util_window.h>
+#include <easybot/util_keyboard.h>
 #include <iostream>
 
 static void startNotepad(PROCESS_INFORMATION *ppi) {
@@ -78,7 +79,9 @@ TEST(UtilWindow, capture) {
     auto pi = startNotepad();
     // ok, can we start the notepad?
     // 黑屏，明天看看问题吧。
-    HWND window = eb::findWindow("Zuma Deluxe 1.0");
+    HWND window = eb::findWindow("notepad.exe");
+    eb::inputKey('A');
+    eb::inputKey('B');
     std::cout << "window: " << window << std::endl;
     auto mat = eb::windowCap(window);
     cv::imshow("img", mat);
