@@ -25,6 +25,13 @@ namespace eb {
         bool isTopLevel();
 
         static std::vector<Window> getTopVisibleWindows();
+
+        std::string str();
+
+        bool isVisible();
+
+        // https://devblogs.microsoft.com/oldnewthing/20200302-00/?p=103507
+        bool isCloaked();
     };
 }
 
