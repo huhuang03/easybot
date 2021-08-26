@@ -8,6 +8,7 @@
 #include <Windows.h>
 #include <string>
 #include <opencv2/opencv.hpp>
+#include <vector>
 
 namespace eb {
     class Window {
@@ -19,6 +20,11 @@ namespace eb {
         Window(HWND hwnd);
 
         void refresh();
+
+        // A window that has no parent, or whose parent is the desktop window, is called a top-level window.
+        bool isTopLevel();
+
+        static std::vector<Window> getTopVisibleWindows();
     };
 }
 

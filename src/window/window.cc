@@ -23,3 +23,27 @@ void eb::Window::refresh() {
     GetWindowRect(this->hwnd, &r);
     this->rect = rectWin2cv(r);
 }
+
+static BOOL WINAPI enumWindowGetTopVisibleWindows(HWND hwnd, LPARAM param) {
+    auto *windows = (std::vector<eb::Window>*)param;
+    // should I check?
+    // I still can't find the top level window.
+    // A window that has no parent, or whose parent is the desktop window, is called a top-level window.
+    auto window = eb::Window(hwnd);
+
+    // For now we don't check screen region because it seems need check many screen.
+    if (window.isTopLevel() && !IsIconic(hwnd) && IsWindowVisible(hwnd)) {
+        windows->push_back(window);
+    }
+    return true;
+}
+
+std::vector<eb::Window> eb::Window::getTopVisibleWindows() {
+    auto rst = std::vector<Window>();
+    EnumWindows(enumWindowGetTopVisibleWindows, (LPARAM)&rst);
+    return rst;
+}
+
+bool eb::Window::isTopLevel() {
+    return this->hwnd ==GetAncestor(this->hwnd,GA_ROOT);
+}

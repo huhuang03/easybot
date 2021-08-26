@@ -11,16 +11,17 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 enable_testing()
+include(GoogleTest)
 
 add_executable(
         test_util_window
         test_util_window.cc
 )
+
 target_link_libraries(
         test_util_window
         gtest_main
         easybot
 )
 
-include(GoogleTest)
 gtest_discover_tests(test_util_window)
