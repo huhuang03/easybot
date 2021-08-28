@@ -6,6 +6,10 @@
 #include <easybot/util_cv.h>
 #include <dwmapi.h>
 
+// yes, I think this go in program
+// Progam is the class name of Program Manager
+const std::vector<std::string> eb::Window::VISIBLE_IGNORE_CLASS{"Progman"};
+
 eb::Window::Window(HWND hwnd): hwnd(hwnd) {
     this->refresh();
 }
@@ -23,6 +27,10 @@ void eb::Window::refresh() {
     RECT r;
     GetWindowRect(this->hwnd, &r);
     this->rect = rectWin2cv(r);
+
+    TCHAR cName[MAX_PATH + 1];
+    GetClassName(hwnd, cName, _countof(cName));
+    this->className = std::string(cName);
 }
 
 static BOOL WINAPI enumWindowGetTopVisibleWindows(HWND hwnd, LPARAM param) {
@@ -61,6 +69,9 @@ bool eb::Window::isCloaked() {
 
 bool eb::Window::isVisible() {
     if (this->isCloaked()) {
+        return false;
+    }
+    if (std::count(Window::VISIBLE_IGNORE_CLASS.begin(), Window::VISIBLE_IGNORE_CLASS.end(), this->className)) {
         return false;
     }
     return !IsIconic(hwnd) && IsWindowVisible(hwnd);

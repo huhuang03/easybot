@@ -12,8 +12,11 @@
 
 namespace eb {
     class Window {
+    private:
+        const static std::vector<std::string> VISIBLE_IGNORE_CLASS;
     public:
         std::string title;
+        std::string className;
         cv::Rect2i rect;
         HWND hwnd;
 

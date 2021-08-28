@@ -11,6 +11,6 @@ TEST(WindowTest, getTopVisibleWindow) {
     auto windows = eb::Window::getTopVisibleWindows();
     // what this & means?
     for (auto &window: windows) {
-        std::cout << "window: " << window.title << std::endl;
+        std::cout << "window: " << window.title << ", hwnd: " << window.hwnd << ", className: " << window.className << std::endl;
     }
 }
