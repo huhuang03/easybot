@@ -74,5 +74,8 @@ bool eb::Window::isVisible() {
     if (std::count(Window::VISIBLE_IGNORE_CLASS.begin(), Window::VISIBLE_IGNORE_CLASS.end(), this->className)) {
         return false;
     }
+    if (this->rect.width == 0 || this->rect.height == 0) {
+        return false;
+    }
     return !IsIconic(hwnd) && IsWindowVisible(hwnd);
 }
