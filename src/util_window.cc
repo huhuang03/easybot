@@ -66,7 +66,7 @@ HWND eb::findWindow(const std::string &windowName) {
     return eb::findWindow("", windowName);
 }
 
-static cv::Mat getMat(HWND hWND){
+static void getMat(HWND hWND, cv::OutputArray out) {
 	HDC deviceContext = GetDC(hWND);
 	HDC memoryDeviceContext = CreateCompatibleDC(deviceContext);
 
@@ -98,19 +98,17 @@ static cv::Mat getMat(HWND hWND){
 	bi.biClrUsed = 3; //we ^^
 	bi.biClrImportant = 4; //still we
 
-	cv::Mat mat = cv::Mat(height, width, CV_8UC4); // 8 bit unsigned ints 4 Channels -> RGBA
+	out.create(height, width, CV_8UC4);
 
-	//transform data and store into mat.data
-	GetDIBits(memoryDeviceContext, bitmap, 0, height, mat.data, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+	cv::Mat img;
+	GetDIBits(memoryDeviceContext, bitmap, 0, height, out.getMatRef().data, (BITMAPINFO*)&bi, DIB_RGB_COLORS);
 
 	//clean up!
 	DeleteObject(bitmap);
 	DeleteDC(memoryDeviceContext); //delete not release!
 	ReleaseDC(hWND, deviceContext);
-
-	return mat;
 }
 
-cv::Mat eb::windowCap(HWND hwnd) {
-    return getMat(hwnd);
+void eb::windowCap(HWND hwnd, cv::OutputArray out) {
+    getMat(hwnd, out);
 }

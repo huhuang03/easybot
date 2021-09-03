@@ -84,9 +84,10 @@ TEST(UtilWindow, capture) {
     eb::inputKey('B');
     Sleep(500);
     ASSERT_TRUE(window != nullptr);
-    auto mat = eb::windowCap(window);
+    cv::Mat mat;
+    eb::windowCap(window, mat);
     cv::imshow("img", mat);
-    cv::waitKey(0);
+    // cv::waitKey(0);
     // how to assert you?
     auto lastColor = mat.at<cv::Vec4b>(mat.rows - 1, mat.cols - 1);
     ASSERT_TRUE(lastColor[0] != 255 && lastColor[0] != 0);

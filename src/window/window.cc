@@ -15,14 +15,7 @@ eb::Window::Window(HWND hwnd): hwnd(hwnd) {
 }
 
 void eb::Window::refresh() {
-    auto len = GetWindowTextLength(hwnd);
-    auto pszMem = (PSTR) VirtualAlloc((LPVOID) NULL,
-                                      (DWORD) (len + 1), MEM_COMMIT,
-                                      PAGE_READWRITE);
-    GetWindowText(hwnd, pszMem,
-                  len + 1);
-    this->title = std::string(pszMem);
-    VirtualFree(pszMem, (DWORD)(len + 1), MEM_DECOMMIT);
+    this->title = this->getTitle();
 
     RECT r;
     GetWindowRect(this->hwnd, &r);
@@ -78,4 +71,18 @@ bool eb::Window::isVisible() {
         return false;
     }
     return !IsIconic(hwnd) && IsWindowVisible(hwnd);
+}
+
+std::string eb::Window::getTitle() {
+    auto len = GetWindowTextLength(hwnd);
+    auto pszMem = (PSTR) VirtualAlloc((LPVOID) NULL,
+                                      (DWORD) (len + 1), MEM_COMMIT,
+                                      PAGE_READWRITE);
+    GetWindowText(hwnd, pszMem,
+                  len + 1);
+    VirtualFree(pszMem, (DWORD)(len + 1), MEM_DECOMMIT);
+    return std::string(pszMem);
+}
+
+void eb::Window::screenShot(const cv::_OutputArray &output) {
 }

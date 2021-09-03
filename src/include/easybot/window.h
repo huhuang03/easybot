@@ -35,6 +35,13 @@ namespace eb {
 
         // https://devblogs.microsoft.com/oldnewthing/20200302-00/?p=103507
         bool isCloaked();
+
+        /**
+         * @return get title dynamic
+         */
+        std::string getTitle();
+
+        void screenShot(cv::OutputArray output);
     };
 }
 
