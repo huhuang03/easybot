@@ -9,4 +9,5 @@
 #include "./util_string.h"
 #include "./util_window.h"
 #include "./util_process.h"
+#include "./window.h"
 #endif //EASYBOT_EASYBOT_H
