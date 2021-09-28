@@ -32,16 +32,3 @@ endfunction()
 
 add_test(test_util_window)
 add_test(test_window)
-
-#add_executable(
-#        test_util_window
-#        test_util_window.cc
-#)
-#
-#target_link_libraries(
-#        test_util_window
-#        gtest_main
-#        easybot
-#)
-#
-#gtest_discover_tests(test_util_window)
