@@ -3,7 +3,7 @@ FILE(GLOB_RECURSE SRC *.h *.hpp *.cpp *.cc *.c)
 add_library(easybot ${SRC})
 
 # not work?
-target_include_directories(easybot PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(easybot PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include> $<INSTALL_INTERFACE:include>)
 
 find_package(OpenCV REQUIRED)
 target_include_directories(easybot PUBLIC ${OpenCV_INCLUDE_DIRS})
@@ -14,7 +14,7 @@ install(TARGETS easybot DESTINATION lib EXPORT easybotTargets)
 install(EXPORT easybotTargets FILE easybotTargets.cmake DESTINATION lib/cmake/easybot)
 # can this emmit?
 # how to let cmakeTargets see this include?
-install(DIRECTORY include/easybot DESTINATION include)
+install(DIRECTORY ../include/easybot DESTINATION ../include)
 
 include(CMakePackageConfigHelpers)
 # generate the config file that is includes the exports

@@ -6,43 +6,8 @@
 #include <easybot/util_window.h>
 #include <easybot/util_keyboard.h>
 #include <iostream>
+#include "util_test.h"
 
-static void startNotepad(PROCESS_INFORMATION *ppi) {
-    STARTUPINFO si;
-    si.cb = sizeof (si);
-    ZeroMemory( &si, sizeof(si) );
-    auto createRst = CreateProcess(
-            R"(C:\WINDOWS\system32\notepad.exe)",
-            nullptr,
-            nullptr,
-            nullptr,
-            false,
-            0,
-            nullptr,
-            nullptr,
-            &si,
-            ppi
-    );
-    std::cout << "createRst: " << createRst << std::endl;
-    if (!createRst) {
-        std::cout << "code: " << GetLastError() << std::endl;
-    }
-    WaitForSingleObject(ppi->hProcess, 1000);
-}
-
-/**
- * let use the compiler sugar.
- */
-static PROCESS_INFORMATION startNotepad() {
-    PROCESS_INFORMATION pi;
-    ZeroMemory( &pi, sizeof(pi) );
-    startNotepad(&pi);
-    return pi;
-}
-
-static void stopNotepad(PROCESS_INFORMATION &pi) {
-    TerminateProcess(pi.hProcess, 0);
-}
 
 
 TEST(UtilWindow, getProcessId) {
@@ -53,14 +18,12 @@ TEST(UtilWindow, getProcessId) {
 
 
 TEST(UtilWindow, findWindow) {
-    PROCESS_INFORMATION pi;
-    ZeroMemory( &pi, sizeof(pi) );
-    startNotepad(&pi);
+    auto handler = startNotepad();
     // ok, can we start the notepad?
     HWND window = eb::findWindow("notepad.exe", "无标题 - 记事本");
     std::cout << "window: " << window << std::endl;
     ASSERT_TRUE(window != nullptr);
-    TerminateProcess(pi.hProcess, 0);
+    stopNotepad(handler);
 }
 
 TEST(UtilProcess, getModuleBase) {
@@ -93,5 +56,5 @@ TEST(UtilWindow, capture) {
     ASSERT_TRUE(lastColor[0] != 255 && lastColor[0] != 0);
     cv::waitKey(0);
     ASSERT_TRUE(window != nullptr);
-    TerminateProcess(pi.hProcess, 0);
+    stopNotepad(pi);
 }

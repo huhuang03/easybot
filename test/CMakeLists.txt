@@ -19,6 +19,7 @@ function(add_test name)
     add_executable(
             ${name}
             ${name}.cc
+            util_test.cc
     )
 
     target_link_libraries(
