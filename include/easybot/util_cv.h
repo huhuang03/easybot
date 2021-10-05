@@ -7,8 +7,12 @@
 
 #include <opencv2/opencv.hpp>
 #include <Windows.h>
+#include <string>
 
 namespace eb {
+    std::string to_string(const cv::Rect2i &rect);
+    std::string to_string(const RECT &rect);
+
     cv::Rect2i rectWin2cv(const RECT &rect);
 
     RECT rectCv2win(const cv::Rect2i &rect);

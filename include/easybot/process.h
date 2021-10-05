@@ -13,7 +13,7 @@ namespace eb {
         DWORD pid;
 
     public:
-        Process(DWORD pid);
+        explicit Process(DWORD pid);
 
         static DWORD PID_NOT_FOUND;
         /**

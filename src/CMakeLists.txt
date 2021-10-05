@@ -2,11 +2,14 @@ FILE(GLOB_RECURSE SRC *.h *.hpp *.cpp *.cc *.c)
 
 add_library(easybot ${SRC})
 
+find_package(Boost REQUIRED)
+
 # not work?
 target_include_directories(easybot PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include> $<INSTALL_INTERFACE:include>)
 
 find_package(OpenCV REQUIRED)
-target_include_directories(easybot PUBLIC ${OpenCV_INCLUDE_DIRS})
+target_include_directories(easybot PUBLIC ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+
 target_link_libraries(easybot ${OpenCV_LIBS} dwmapi)
 
 # install target

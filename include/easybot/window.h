@@ -29,12 +29,12 @@ namespace eb {
 
         static std::vector<Window> getTopVisibleWindows();
 
-        std::string str();
+        std::string str() const;
 
-        bool isVisible();
+        bool isVisible() const;
 
         // https://devblogs.microsoft.com/oldnewthing/20200302-00/?p=103507
-        bool isCloaked();
+        bool isCloaked() const;
 
         /**
          * @return get title dynamic
@@ -42,6 +42,8 @@ namespace eb {
         std::string getTitle();
 
         void screenShot(cv::OutputArray output);
+
+        friend std::ostream& operator<<(std::ostream& out, const Window& window);
     };
 }
 

@@ -7,7 +7,7 @@
 #include <dwmapi.h>
 
 // yes, I think this go in program
-// Progam is the class name of Program Manager
+// Program is the class name of Program Manager
 const std::vector<std::string> eb::Window::VISIBLE_IGNORE_CLASS{"Progman"};
 
 eb::Window::Window(HWND hwnd): hwnd(hwnd) {
@@ -50,17 +50,17 @@ bool eb::Window::isTopLevel() {
     return this->hwnd ==GetAncestor(this->hwnd,GA_ROOT);
 }
 
-std::string eb::Window::str() {
-    return "not impl";
+std::string eb::Window::str() const {
+    return "Window(title: " + this->title + ", rect: " + eb::to_string(this->rect) + ")";
 }
 
-bool eb::Window::isCloaked() {
+bool eb::Window::isCloaked() const {
     BOOL isCloaked = FALSE;
     return SUCCEEDED(DwmGetWindowAttribute(hwnd,  DWMWA_CLOAKED,
                                             &isCloaked, sizeof(isCloaked))) && isCloaked;
 }
 
-bool eb::Window::isVisible() {
+bool eb::Window::isVisible() const {
     if (this->isCloaked()) {
         return false;
     }
@@ -80,9 +80,15 @@ std::string eb::Window::getTitle() {
                                       PAGE_READWRITE);
     GetWindowText(hwnd, pszMem,
                   len + 1);
+    auto rst = std::string(pszMem);
     VirtualFree(pszMem, (DWORD)(len + 1), MEM_DECOMMIT);
-    return std::string(pszMem);
+    return rst;
 }
 
 void eb::Window::screenShot(const cv::_OutputArray &output) {
+}
+
+std::ostream &eb::operator<<(std::ostream &out, const eb::Window &window) {
+    out << window.str();
+    return out;
 }

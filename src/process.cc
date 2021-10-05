@@ -17,4 +17,34 @@ namespace eb {
     }
 
     Process::Process(DWORD pid): pid(pid) {}
+
+    struct EnumWindowsGetWindowsParam {
+        std::vector<eb::Window> *rst;
+        DWORD pid;
+    };
+
+    static BOOL CALLBACK enumWindowsGetWindows(HWND hwnd, LPARAM param) {
+        auto* config = (EnumWindowsGetWindowsParam*)param;
+        DWORD processId;
+        GetWindowThreadProcessId(hwnd, &processId);
+        if (processId == config->pid) {
+            // throw exception at here?
+            config->rst->push_back(eb::Window(hwnd));
+        }
+        return TRUE;
+    }
+
+    std::vector<eb::Window> Process::getWindows() {
+        std::vector<eb::Window> rst;
+        if (this->pid == PID_NOT_FOUND) {
+            return rst;
+        }
+
+        struct EnumWindowsGetWindowsParam param {
+            &rst,
+            this->pid,
+        };
+        EnumWindows(enumWindowsGetWindows, reinterpret_cast<LPARAM>(&param));
+        return rst;
+    }
 }

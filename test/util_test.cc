@@ -20,7 +20,7 @@ HANDLE startNotepad() {
             nullptr,
             nullptr,
             &si,
-            &pi;
+            &pi
     );
     std::cout << "createRst: " << createRst << std::endl;
     if (!createRst) {
