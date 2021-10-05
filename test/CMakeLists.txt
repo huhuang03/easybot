@@ -33,3 +33,4 @@ endfunction()
 
 add_test(test_util_window)
 add_test(test_window)
+add_test(test_process)

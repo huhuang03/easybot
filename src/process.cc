@@ -6,15 +6,15 @@
 #include <easybot/util_process.h>
 
 namespace eb {
-    Process::PID_NOT_FOUND = 0;
+    DWORD Process::PID_NOT_FOUND = 0;
 
-    Process Process::findByName(const std::string &name) {
-        return Process(findProcessId(name))
+    eb::Process Process::findByName(const std::string &name) {
+        return eb::Process(findProcessId(name));
     }
-
-    Process(DWORD pid): pid(pid) { }
 
     DWORD Process::getPid() {
         return this->pid;
     }
+
+    Process::Process(DWORD pid): pid(pid) {}
 }
