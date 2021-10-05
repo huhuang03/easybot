@@ -16,12 +16,17 @@ namespace eb {
         explicit Process(DWORD pid);
 
         static DWORD PID_NOT_FOUND;
+
         /**
          * return pid = 0 if not found
          */
         static Process findByName(const std::string &name);
 
         std::vector<eb::Window> getWindows();
+
+        // I want design a function that return the biggest window in this process.
+        // But how can I do if I don't have any window. Throw an exception?
+        eb::Window getBiggestWindow();
 
         DWORD getPid();
     };

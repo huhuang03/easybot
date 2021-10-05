@@ -47,4 +47,22 @@ namespace eb {
         EnumWindows(enumWindowsGetWindows, reinterpret_cast<LPARAM>(&param));
         return rst;
     }
+
+    eb::Window Process::getBiggestWindow() {
+        if (this->pid == PID_NOT_FOUND) {
+            throw std::runtime_error("Process id is 0");
+        }
+
+        auto windows = this->getWindows();
+        if (windows.empty()) {
+            throw std::runtime_error("Has no any window in Process::getBiggestWindow");
+        }
+        auto rst = windows[0];
+        for (const auto &window: windows) {
+            if (window.rect.width > rst.rect.width) {
+                rst = window;
+            }
+        }
+        return rst;
+    }
 }

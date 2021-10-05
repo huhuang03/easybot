@@ -26,3 +26,11 @@ TEST(ProcessTest, testGetWindow) {
     ASSERT_TRUE( !windows.empty());
     stopNotepad(h);
 }
+
+TEST(ProcessTest, testGetBiggestWindow) {
+    auto h = startNotepad();
+    auto p = eb::Process::findByName("notepad.exe");
+    auto window = p.getBiggestWindow();
+    std::cout << "window: " << window << ", visible: " << window.isVisible() << std::endl;
+    stopNotepad(h);
+}
