@@ -22,7 +22,7 @@ namespace eb {
          */
         static Process findByName(const std::string &name);
 
-        std::vector<eb::Window> getWindows();
+        std::vector<eb::Window> getWindows(bool ignoreIME = true, bool ignoreToolTips = true);
 
         // I want design a function that return the biggest window in this process.
         // But how can I do if I don't have any window. Throw an exception?

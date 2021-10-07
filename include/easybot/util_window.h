@@ -20,6 +20,6 @@ namespace eb {
      */
     HWND findWindow(const std::string& processName, std::string windowName);
 
-    void windowCap(HWND hwnd, cv::OutputArray out);
+    void screenshot(HWND hwnd, cv::OutputArray out);
 }
 #endif //EASYBOT_UTIL_WINDOW_H

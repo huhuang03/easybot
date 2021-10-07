@@ -10,4 +10,5 @@
 #include "./util_window.h"
 #include "./util_process.h"
 #include "./window.h"
+#include "./process.h"
 #endif //EASYBOT_EASYBOT_H

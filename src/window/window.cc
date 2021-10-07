@@ -4,17 +4,46 @@
 
 #include "easybot/window.h"
 #include <easybot/util_cv.h>
+#include <easybot/util_window.h>
 #include <dwmapi.h>
+#include <WinUser.h>
+
+std::string eb::Window::TITLE_MSCTFIME_UI = "MSCTFIME UI";
+std::string eb::Window::TITLE_DEFAULT_IME = "Default IME";
 
 // yes, I think this go in program
 // Program is the class name of Program Manager
 const std::vector<std::string> eb::Window::VISIBLE_IGNORE_CLASS{"Progman"};
+
+
+struct EnumChildWindowsGetSubWindowsParam {
+    std::vector<eb::Window> *rst;
+};
+
+BOOL enumChildWindowsGetSubWindows(HWND hwnd, LPARAM param) {
+    auto *config = reinterpret_cast<EnumChildWindowsGetSubWindowsParam *>(param);
+    config->rst->push_back(eb::Window(hwnd));
+    return TRUE;
+}
+
+std::vector<eb::Window> eb::Window::getSubWindows() {
+    std::vector<eb::Window> rst;
+    struct EnumChildWindowsGetSubWindowsParam param {
+        &rst,
+    };
+
+    EnumChildWindows(this->hwnd, enumChildWindowsGetSubWindows, reinterpret_cast<LPARAM>(&param));
+    return rst;
+}
 
 eb::Window::Window(HWND hwnd): hwnd(hwnd) {
     this->refresh();
 }
 
 void eb::Window::refresh() {
+    if (this->hwnd == nullptr) {
+        return;
+    }
     this->title = this->getTitle();
 
     RECT r;
@@ -34,7 +63,7 @@ static BOOL WINAPI enumWindowGetTopVisibleWindows(HWND hwnd, LPARAM param) {
     auto window = eb::Window(hwnd);
 
     // For now we don't check screen region because it seems need check many screen.
-    if (window.isTopLevel() && window.isVisible()) {
+    if (window.isTopLevel() && window.isInScreen()) {
         windows->push_back(window);
     }
     return true;
@@ -46,8 +75,8 @@ std::vector<eb::Window> eb::Window::getTopVisibleWindows() {
     return rst;
 }
 
-bool eb::Window::isTopLevel() {
-    return this->hwnd ==GetAncestor(this->hwnd,GA_ROOT);
+bool eb::Window::isTopLevel() const {
+    return this->hwnd == GetAncestor(this->hwnd, GA_ROOT);
 }
 
 std::string eb::Window::str() const {
@@ -60,7 +89,7 @@ bool eb::Window::isCloaked() const {
                                             &isCloaked, sizeof(isCloaked))) && isCloaked;
 }
 
-bool eb::Window::isVisible() const {
+bool eb::Window::isInScreen() const {
     if (this->isCloaked()) {
         return false;
     }
@@ -85,7 +114,9 @@ std::string eb::Window::getTitle() {
     return rst;
 }
 
-void eb::Window::screenShot(const cv::_OutputArray &output) {
+void eb::Window::screenshot(const cv::_OutputArray &output) {
+    // ok, how to do this?
+    eb::screenshot(this->hwnd, output);
 }
 
 std::ostream &eb::operator<<(std::ostream &out, const eb::Window &window) {

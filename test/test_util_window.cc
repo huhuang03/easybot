@@ -48,7 +48,7 @@ TEST(UtilWindow, capture) {
     Sleep(500);
     ASSERT_TRUE(window != nullptr);
     cv::Mat mat;
-    eb::windowCap(window, mat);
+    eb::screenshot(window, mat);
     cv::imshow("img", mat);
     // cv::waitKey(0);
     // how to assert you?

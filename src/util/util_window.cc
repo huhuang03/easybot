@@ -109,6 +109,6 @@ static void getMat(HWND hWND, cv::OutputArray out) {
 	ReleaseDC(hWND, deviceContext);
 }
 
-void eb::windowCap(HWND hwnd, cv::OutputArray out) {
+void eb::screenshot(HWND hwnd, cv::OutputArray out) {
     getMat(hwnd, out);
 }

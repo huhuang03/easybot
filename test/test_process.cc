@@ -20,7 +20,7 @@ TEST(ProcessTest, testGetWindow) {
     auto p = eb::Process::findByName("notepad.exe");
     auto windows = p.getWindows();
     for (const auto &window: windows) {
-        std::cout << "window: " << window << ", visible: " << window.isVisible() << std::endl;
+        std::cout << "window: " << window << ", visible: " << window.isTopLevel() << std::endl;
     }
     std::cout << windows.size() << std::endl;
     ASSERT_TRUE( !windows.empty());
@@ -31,6 +31,6 @@ TEST(ProcessTest, testGetBiggestWindow) {
     auto h = startNotepad();
     auto p = eb::Process::findByName("notepad.exe");
     auto window = p.getBiggestWindow();
-    std::cout << "window: " << window << ", visible: " << window.isVisible() << std::endl;
+    std::cout << "window: " << window << ", visible: " << window.isInScreen() << std::endl;
     stopNotepad(h);
 }

@@ -34,17 +34,34 @@ namespace eb {
         return TRUE;
     }
 
-    std::vector<eb::Window> Process::getWindows() {
-        std::vector<eb::Window> rst;
+    std::vector<eb::Window> Process::getWindows(bool ignoreIME, bool ignoreToolTips) {
+        std::vector<eb::Window> allWindows;
         if (this->pid == PID_NOT_FOUND) {
-            return rst;
+            return allWindows;
         }
 
         struct EnumWindowsGetWindowsParam param {
-            &rst,
+            &allWindows,
             this->pid,
         };
         EnumWindows(enumWindowsGetWindows, reinterpret_cast<LPARAM>(&param));
+
+        // remove or copy??
+        std::vector<eb::Window> rst;
+        for (const auto &w: allWindows) {
+            if (ignoreIME) {
+                if (w.title == eb::Window::TITLE_MSCTFIME_UI
+                || w.title == eb::Window::TITLE_DEFAULT_IME) {
+                    continue;
+                }
+            }
+            if (ignoreToolTips) {
+                if (w.className == "tooltips_class32") {
+                    continue;
+                }
+            }
+            rst.push_back(w);
+        }
         return rst;
     }
 
