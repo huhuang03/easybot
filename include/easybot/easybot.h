@@ -11,4 +11,6 @@
 #include "./util_process.h"
 #include "./window.h"
 #include "./process.h"
+#include "./model/hsv.h"
+#include "./model/hsv_range.h"
 #endif //EASYBOT_EASYBOT_H
