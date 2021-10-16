@@ -5,6 +5,7 @@
 #ifndef PICTOOL_HSV_H
 #define PICTOOL_HSV_H
 #include <opencv2/opencv.hpp>
+#include <iostream>
 
 namespace eb {
 
@@ -15,6 +16,9 @@ namespace eb {
      * v 0 ~ 255
      */
     class HSV {
+    public:
+        HSV();
+        HSV(int h, int s, int v);
     public:
         static int H_MIN;
         static int H_MAX;
@@ -38,10 +42,12 @@ namespace eb {
         void setS(int s);
         void setV(int v);
 
-        cv::Scalar_<int> toScale();
-        cv::Scalar_<int> toHMinScale();
-        cv::Scalar_<int> toHMaxScale();
+        cv::Scalar_<int> toScale() const;
+        cv::Scalar_<int> toHMinScale() const;
+        cv::Scalar_<int> toHMaxScale() const;
+
+        friend std::ostream& operator<<(std::ostream& os, const HSV& thiz);
     };
 }
 
-#endif //PICTOOL_HSV_H
+#endif // constPICTOOL_HSV_H

@@ -6,6 +6,7 @@
 #define EASYBOT_HSV_RANGE_H
 #include "./hsv.h"
 #include <opencv2/opencv.hpp>
+#include <iostream>
 
 namespace eb {
     class HSVRange {
@@ -19,6 +20,9 @@ namespace eb {
     public:
         HSVRange(HSV h1, HSV v2);
 
+        HSV h1() const;
+        HSV h2() const;
+
         /**
          * h是否跨了边界
          * @return
@@ -26,6 +30,8 @@ namespace eb {
         bool isHCrossBoundary();
 
         void work(cv::InputArray in, cv::OutputArray out);
+
+        friend std::ostream& operator<<(std::ostream& os, const HSVRange& thiz);
     };
 }
 #endif //EASYBOT_HSV_RANGE_H

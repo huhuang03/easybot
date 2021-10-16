@@ -11,6 +11,10 @@ int eb::HSV::S_MAX = 255;
 int eb::HSV::V_MIN = 0;
 int eb::HSV::V_MAX = 255;
 
+eb::HSV::HSV(): HSV(0, 0, 0) {}
+
+eb::HSV::HSV(int h, int s, int v): _h(h), _s(s), _v(v) { }
+
 int eb::HSV::h() const {
     return this->_h;
 }
@@ -35,14 +39,19 @@ void eb::HSV::setV(int v) {
     this->_v = v;
 }
 
-cv::Scalar_<int> eb::HSV::toScale() {
+cv::Scalar_<int> eb::HSV::toScale() const {
     return cv::Scalar_<int>(this->h(), this->s(), this->v());
 }
 
-cv::Scalar_<int> eb::HSV::toHMinScale() {
+cv::Scalar_<int> eb::HSV::toHMinScale() const {
     return cv::Scalar_<int>(H_MIN, this->s(), this->v());
 }
 
-cv::Scalar_<int> eb::HSV::toHMaxScale() {
+cv::Scalar_<int> eb::HSV::toHMaxScale() const {
     return cv::Scalar_<int>(H_MAX, this->s(), this->v());
+}
+
+std::ostream& eb::operator<<(std::ostream &os, const eb::HSV &thiz) {
+    os << "(" << thiz.h() << ", " << thiz.s() << ", " << thiz.v() << ")";
+    return os;
 }

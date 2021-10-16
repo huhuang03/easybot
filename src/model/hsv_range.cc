@@ -36,3 +36,16 @@ void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
 bool eb::HSVRange::isHCrossBoundary() {
     return this->_h1.h() > this->_h2.h();
 }
+
+std::ostream &eb::operator<<(std::ostream &os, const eb::HSVRange &thiz) {
+    os << "[" << thiz._h1 << " - " << thiz._h2 << "]";
+    return os;
+}
+
+eb::HSV eb::HSVRange::h2() const {
+    return this->_h2;
+}
+
+eb::HSV eb::HSVRange::h1() const {
+    return this->_h1;
+}
