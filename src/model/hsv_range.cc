@@ -18,17 +18,21 @@ void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
     cv::cvtColor(in, hsv, cv::COLOR_RGB2HSV);
 
     cv::Mat mask;
+//    std::cout << "hsv type: " << hsv.type() << std::endl;
+    auto a = cv::Scalar::zeros();
     if (!this->isHCrossBoundary()) {
+//        cv::inRange(hsv, a, a, mask);
         cv::inRange(hsv, this->_h1.toScale(), this->_h2.toScale(), mask);
     } else {
         cv::Mat mask1;
-        cv::inRange(hsv, this->_h1.toScale(), this->_h2.toHMaxScale(), mask);
+        cv::inRange(hsv, this->_h1.toScale(), this->_h2.toHMaxScale(), mask1);
 
         cv::Mat mask2;
-        cv::inRange(hsv, this->_h1.toHMinScale(), this->_h2.toScale(), mask);
+        cv::inRange(hsv, this->_h1.toHMinScale(), this->_h2.toScale(), mask2);
 
         cv::bitwise_or(mask1, mask2, mask);
     }
+//    std::cout << "mask: " << mask << std::endl;
 
     cv::bitwise_and(in, in, out, mask);
 }

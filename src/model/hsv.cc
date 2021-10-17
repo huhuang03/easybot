@@ -39,16 +39,16 @@ void eb::HSV::setV(int v) {
     this->_v = v;
 }
 
-cv::Scalar_<int> eb::HSV::toScale() const {
-    return cv::Scalar_<int>(this->h(), this->s(), this->v());
+cv::Scalar eb::HSV::toScale() const {
+    return {static_cast<double>(this->h()), static_cast<double>(this->s()), static_cast<double>(this->v())};
 }
 
-cv::Scalar_<int> eb::HSV::toHMinScale() const {
-    return cv::Scalar_<int>(H_MIN, this->s(), this->v());
+cv::Scalar eb::HSV::toHMinScale() const {
+    return {static_cast<double>(H_MIN), static_cast<double>(this->s()), static_cast<double>(this->v())};
 }
 
-cv::Scalar_<int> eb::HSV::toHMaxScale() const {
-    return cv::Scalar_<int>(H_MAX, this->s(), this->v());
+cv::Scalar eb::HSV::toHMaxScale() const {
+    return {static_cast<double>(H_MAX), static_cast<double>(this->s()), static_cast<double>(this->v())};
 }
 
 std::ostream& eb::operator<<(std::ostream &os, const eb::HSV &thiz) {

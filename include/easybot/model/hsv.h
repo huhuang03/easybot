@@ -42,9 +42,9 @@ namespace eb {
         void setS(int s);
         void setV(int v);
 
-        cv::Scalar_<int> toScale() const;
-        cv::Scalar_<int> toHMinScale() const;
-        cv::Scalar_<int> toHMaxScale() const;
+        cv::Scalar toScale() const;
+        cv::Scalar toHMinScale() const;
+        cv::Scalar toHMaxScale() const;
 
         friend std::ostream& operator<<(std::ostream& os, const HSV& thiz);
     };

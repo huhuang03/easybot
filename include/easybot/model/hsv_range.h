@@ -32,6 +32,7 @@ namespace eb {
         void work(cv::InputArray in, cv::OutputArray out);
 
         friend std::ostream& operator<<(std::ostream& os, const HSVRange& thiz);
+
     };
 }
 #endif //EASYBOT_HSV_RANGE_H
