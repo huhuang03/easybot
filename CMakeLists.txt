@@ -15,8 +15,7 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 # ok let's try the 32 bit
 
 project(easybot)
-
-message("CMAKE_SIZEOF_VOID_P: ${CMAKE_SIZEOF_VOID_P}")
+#message("CMAKE_SIZEOF_VOID_P: ${CMAKE_SIZEOF_VOID_P}")
 
 add_subdirectory(src)
 add_subdirectory(test EXCLUDE_FROM_ALL)

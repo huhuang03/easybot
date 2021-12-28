@@ -13,4 +13,5 @@
 #include "./process.h"
 #include "./model/hsv.h"
 #include "./model/hsv_range.h"
+#include "./model/coordinate.h"
 #endif //EASYBOT_EASYBOT_H

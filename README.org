@@ -1,3 +1,1 @@
-* To prevent repeat code, we build this lib.
-
-A better name, like opencv, easygui, we need a simple name.
+If I don't know my purpose of ths project, how can I go on?
