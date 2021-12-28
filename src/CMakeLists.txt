@@ -1,5 +1,6 @@
 FILE(GLOB_RECURSE SRC *.h *.hpp *.cpp *.cc *.c)
 
+message("hahah")
 message("SRC: ${SRC}")
 add_library(easybot ${SRC})
 
