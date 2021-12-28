@@ -25,7 +25,7 @@ namespace eb {
         cv::Rect2i rect;
         HWND hwnd;
 
-        Window(HWND hwnd);
+        explicit Window(HWND hwnd);
 
         std::vector<eb::Window> getSubWindows();
 

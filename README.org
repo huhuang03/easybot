@@ -1,1 +1,3 @@
-If I don't know my purpose of ths project, how can I go on?
+Ok, for now easybot is is a ok name, which means this is a game cv bot lib.
+
+And of cause, it's only work on win.

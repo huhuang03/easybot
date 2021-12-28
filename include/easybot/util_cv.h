@@ -10,6 +10,7 @@
 #include <string>
 
 namespace eb {
+    // can I add method to class or rect?
     std::string to_string(const cv::Rect2i &rect);
     std::string to_string(const RECT &rect);
 
