@@ -1,7 +1,3 @@
-images:
-  - Visual Studio 2017
-
-clone_folder: c:\source
 build_script:
 - cmd: >-
     mkdir build
