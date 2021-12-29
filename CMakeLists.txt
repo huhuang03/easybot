@@ -1,6 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
-message($ENV{VCPKG_ROOT})
+# how did you do this on appveyor?
+#message($ENV{VCPKG_ROOT})
 
 if (NOT DEFINED ENV{VCPKG_ROOT})
     message(Please set the vcpkg_root env)
