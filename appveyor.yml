@@ -1,10 +1,15 @@
 image: Visual Studio 2017
-cache: c:\tools\vcpkg\installed\
+cache:
+    - c:\tools\vcpkg\installed\
 build_script:
 - cmd: >-
     vcpkg install boost:x86-windows
 
     vcpkg install boost:x64-windows
+      
+    vcpkg install opencv4:x86-windows
+      
+    vcpkg install opencv4:x64-windows
 
     mkdir build
 
