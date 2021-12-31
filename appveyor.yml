@@ -1,4 +1,3 @@
-fdafsda: fdsafds
 image: Visual Studio 2017
 cache:
     - c:\tools\vcpkg\installed\
