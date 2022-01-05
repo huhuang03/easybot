@@ -1,6 +1,6 @@
 image: Visual Studio 2017
 cache:
-    - c:\tools\vcpkg\installed\
+    - c:\Tools\vcpkg\installed\
 build_script:
 - cmd: >-
     vcpkg install boost:x86-windows
