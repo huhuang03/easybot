@@ -1,20 +1,20 @@
 image: Visual Studio 2017
 cache:
-    - c:\Tools\vcpkg\installed\
+  - c:\Tools\vcpkg\installed\
 build_script:
-- cmd: >-
-    vcpkg install boost:x86-windows
-
-    vcpkg install boost:x64-windows
+  - cmd: >-
+      vcpkg install boost:x86-windows
       
-    vcpkg install opencv4:x86-windows
+      vcpkg install boost:x64-windows
       
-    vcpkg install opencv4:x64-windows
-
-    mkdir build
-
-    cd build
-
-    cmake -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake  .. -G "Visual Studio 15"
-
-    cmake --build . --config "Debug"
+      vcpkg install opencv4:x86-windows
+      
+      vcpkg install opencv4:x64-windows
+      
+      mkdir build
+      
+      cd build
+      
+      cmake -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake  .. -G "Visual Studio 15"
+      
+      cmake --build . --config "Debug"

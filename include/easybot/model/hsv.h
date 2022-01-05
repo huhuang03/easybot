@@ -9,45 +9,45 @@
 
 namespace eb {
 
-    /**
-     * Use the half mode.
-     * h 0 ~ 180
-     * s 0 ~ 255
-     * v 0 ~ 255
-     */
-    class HSV {
-    public:
-        HSV();
-        HSV(int h, int s, int v);
-    public:
-        static int H_MIN;
-        static int H_MAX;
-        static int S_MIN;
-        static int S_MAX;
-        static int V_MIN;
-        static int V_MAX;
+/**
+ * Use the half mode.
+ * h 0 ~ 180
+ * s 0 ~ 255
+ * v 0 ~ 255
+ */
+class HSV {
+ public:
+  HSV();
+  HSV(int h, int s, int v);
+ public:
+  static int H_MIN;
+  static int H_MAX;
+  static int S_MIN;
+  static int S_MAX;
+  static int V_MIN;
+  static int V_MAX;
 
-        // it's good for the public??
-    private:
-        int _h;
-        int _s;
-        int _v;
+  // it's good for the public??
+ private:
+  int _h;
+  int _s;
+  int _v;
 
-    public:
-        int h() const;
-        int s() const;
-        int v() const;
+ public:
+  int h() const;
+  int s() const;
+  int v() const;
 
-        void setH(int h);
-        void setS(int s);
-        void setV(int v);
+  void setH(int h);
+  void setS(int s);
+  void setV(int v);
 
-        cv::Scalar toScale() const;
-        cv::Scalar toHMinScale() const;
-        cv::Scalar toHMaxScale() const;
+  cv::Scalar toScale() const;
+  cv::Scalar toHMinScale() const;
+  cv::Scalar toHMaxScale() const;
 
-        friend std::ostream& operator<<(std::ostream& os, const HSV& thiz);
-    };
+  friend std::ostream &operator<<(std::ostream &os, const HSV &thiz);
+};
 }
 
 #endif // constPICTOOL_HSV_H

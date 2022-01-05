@@ -8,7 +8,10 @@
 #include <opencv2/opencv.hpp>
 
 namespace eb {
-    typedef cv::Point2i Coordinate;
+/**
+ * Doesn't has many mean.
+ */
+typedef cv::Point2i Coordinate;
 }
 
 #endif //EASYBOT_COORDINATE_H

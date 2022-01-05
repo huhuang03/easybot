@@ -5,51 +5,50 @@
 
 #include <easybot/model/hsv_range.h>
 
-
 eb::HSVRange::HSVRange(HSV h1, HSV h2) {
-    this->_h1 = h1;
-    this->_h2 = h2;
+  this->_h1 = h1;
+  this->_h2 = h2;
 }
 
 void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
-    out.create(in.size(), in.type());
-    // ok, let's do something.
-    cv::Mat hsv;
-    cv::cvtColor(in, hsv, cv::COLOR_RGB2HSV);
+  out.create(in.size(), in.type());
+  // ok, let's do something.
+  cv::Mat hsv;
+  cv::cvtColor(in, hsv, cv::COLOR_RGB2HSV);
 
-    cv::Mat mask;
+  cv::Mat mask;
 //    std::cout << "hsv type: " << hsv.type() << std::endl;
-    auto a = cv::Scalar::zeros();
-    if (!this->isHCrossBoundary()) {
+  auto a = cv::Scalar::zeros();
+  if (!this->isHCrossBoundary()) {
 //        cv::inRange(hsv, a, a, mask);
-        cv::inRange(hsv, this->_h1.toScale(), this->_h2.toScale(), mask);
-    } else {
-        cv::Mat mask1;
-        cv::inRange(hsv, this->_h1.toScale(), this->_h2.toHMaxScale(), mask1);
+    cv::inRange(hsv, this->_h1.toScale(), this->_h2.toScale(), mask);
+  } else {
+    cv::Mat mask1;
+    cv::inRange(hsv, this->_h1.toScale(), this->_h2.toHMaxScale(), mask1);
 
-        cv::Mat mask2;
-        cv::inRange(hsv, this->_h1.toHMinScale(), this->_h2.toScale(), mask2);
+    cv::Mat mask2;
+    cv::inRange(hsv, this->_h1.toHMinScale(), this->_h2.toScale(), mask2);
 
-        cv::bitwise_or(mask1, mask2, mask);
-    }
+    cv::bitwise_or(mask1, mask2, mask);
+  }
 //    std::cout << "mask: " << mask << std::endl;
 
-    cv::bitwise_and(in, in, out, mask);
+  cv::bitwise_and(in, in, out, mask);
 }
 
 bool eb::HSVRange::isHCrossBoundary() {
-    return this->_h1.h() > this->_h2.h();
+  return this->_h1.h() > this->_h2.h();
 }
 
 std::ostream &eb::operator<<(std::ostream &os, const eb::HSVRange &thiz) {
-    os << "[" << thiz._h1 << " - " << thiz._h2 << "]";
-    return os;
+  os << "[" << thiz._h1 << " - " << thiz._h2 << "]";
+  return os;
 }
 
 eb::HSV eb::HSVRange::h2() const {
-    return this->_h2;
+  return this->_h2;
 }
 
 eb::HSV eb::HSVRange::h1() const {
-    return this->_h1;
+  return this->_h1;
 }

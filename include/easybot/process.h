@@ -8,28 +8,28 @@
 #include "./window.h"
 
 namespace eb {
-    class Process {
-    private:
-        DWORD pid;
+class Process {
+ private:
+  DWORD pid;
 
-    public:
-        explicit Process(DWORD pid);
+ public:
+  explicit Process(DWORD pid);
 
-        static DWORD PID_NOT_FOUND;
+  static DWORD PID_NOT_FOUND;
 
-        /**
-         * return pid = 0 if not found
-         */
-        static Process findByName(const std::string &name);
+  /**
+   * return pid = 0 if not found
+   */
+  static Process findByName(const std::string &name);
 
-        std::vector<eb::Window> getWindows(bool ignoreIME = true, bool ignoreToolTips = true);
+  std::vector<eb::Window> getWindows(bool ignoreIME = true, bool ignoreToolTips = true);
 
-        // I want design a function that return the biggest window in this process.
-        // But how can I do if I don't have any window. Throw an exception?
-        eb::Window getBiggestWindow();
+  // I want design a function that return the biggest window in this process.
+  // But how can I do if I don't have any window. Throw an exception?
+  eb::Window getBiggestWindow();
 
-        DWORD getPid();
-    };
+  DWORD getPid();
+};
 }
 
 #endif //MH_TOOL_PROCESS_H
