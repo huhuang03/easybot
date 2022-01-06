@@ -14,4 +14,5 @@
 #include "./model/hsv.h"
 #include "./model/hsv_range.h"
 #include "./model/coordinate.h"
+#include "./model/pos.h"
 #endif //EASYBOT_EASYBOT_H
