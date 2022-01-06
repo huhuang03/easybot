@@ -3,17 +3,17 @@
 //
 
 #include <gtest/gtest.h>
-#include <easybot/util_process.h>
+#include "easybot/util/util_process.h"
 #include <iostream>
 #include <easybot/window.h>
 
 TEST(WindowTest, getTopVisibleWindow) {
-    auto windows = eb::Window::getTopVisibleWindows();
-    // what this & means?
-    for (auto &window: windows) {
-        std::cout << "window: " << window.title
-        << ", hwnd: " << window.hwnd << ", className: " << window.className
-        << ", rect: " << window.rect
-        << std::endl;
-    }
+  auto windows = eb::Window::getTopVisibleWindows();
+  // what this & means?
+  for (auto &window : windows) {
+    std::cout << "window: " << window.title
+              << ", hwnd: " << window.hwnd << ", className: " << window.className
+              << ", rect: " << window.rect
+              << std::endl;
+  }
 }

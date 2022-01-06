@@ -5,8 +5,8 @@
 #ifndef ZUMA_BOT_UTIL_KEYBOARD_H
 #define ZUMA_BOT_UTIL_KEYBOARD_H
 namespace eb {
-    void clickMouseLeft();
+void clickMouseLeft();
 
-    void inputKey(char c);
+void inputKey(char c);
 }
 #endif //ZUMA_BOT_UTIL_KEYBOARD_H

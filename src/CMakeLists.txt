@@ -1,8 +1,6 @@
-FILE(GLOB_RECURSE SRC *.h *.hpp *.cpp *.cc *.c)
+FILE(GLOB_RECURSE SRC *.h *.hpp *.cpp *.cc *.c ${CMAKE_CURRENT_SOURCE_DIR}/../include/*.h ${CMAKE_CURRENT_SOURCE_DIR}/../include/*.hpp)
 
 
-message("hahah")
-message("SRC: ${SRC}")
 add_library(easybot ${SRC})
 
 find_package(Boost REQUIRED)

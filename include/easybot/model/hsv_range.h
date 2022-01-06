@@ -9,30 +9,30 @@
 #include <iostream>
 
 namespace eb {
-    class HSVRange {
-    private:
-        // use pointer look like good, but I don't want
-        // to do like this.
-        HSV _h1;
-        HSV _h2;
+class HSVRange {
+ private:
+  // use pointer look like good, but I don't want
+  // to do like this.
+  HSV _h1;
+  HSV _h2;
 
-        // named lower and upper is better?
-    public:
-        HSVRange(HSV h1, HSV v2);
+  // named lower and upper is better?
+ public:
+  HSVRange(HSV h1, HSV v2);
 
-        HSV h1() const;
-        HSV h2() const;
+  HSV h1() const;
+  HSV h2() const;
 
-        /**
-         * h是否跨了边界
-         * @return
-         */
-        bool isHCrossBoundary();
+  /**
+   * h是否跨了边界
+   * @return
+   */
+  bool isHCrossBoundary();
 
-        void work(cv::InputArray in, cv::OutputArray out);
+  void work(cv::InputArray in, cv::OutputArray out);
 
-        friend std::ostream& operator<<(std::ostream& os, const HSVRange& thiz);
+  friend std::ostream &operator<<(std::ostream &os, const HSVRange &thiz);
 
-    };
+};
 }
 #endif //EASYBOT_HSV_RANGE_H

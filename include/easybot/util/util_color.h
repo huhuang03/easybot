@@ -9,7 +9,7 @@
 #include <string>
 
 namespace eb {
-    std::string color_str(COLORREF c);
+std::string color_str(COLORREF c);
 }
 
 #endif //ZUMA_BOT_UTIL_COLOR_H

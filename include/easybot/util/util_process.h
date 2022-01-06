@@ -8,7 +8,7 @@
 #include <Windows.h>
 
 namespace eb {
-    DWORD findProcessId(const std::string &processName);
-    DWORD getBaseAddr(DWORD processId, const std::string &moduleName);
+DWORD findProcessId(const std::string &processName);
+DWORD getBaseAddr(DWORD processId, const std::string &moduleName);
 }
 #endif //EASYBOT_UTIL_PROCESS_H
