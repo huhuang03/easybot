@@ -6,6 +6,7 @@
 #define MH_TOOL_PROCESS_H
 #include <vector>
 #include "./window.h"
+#include <easybot/internal/global.h>
 
 namespace eb {
 class Process {
@@ -13,6 +14,8 @@ class Process {
   DWORD pid;
 
  public:
+  static DWORD findProcessId(const std::string &processName);
+  static DWORD getBaseAddr(DWORD processId, const std::string &moduleName);
   explicit Process(DWORD pid);
 
   static DWORD PID_NOT_FOUND;

@@ -5,17 +5,16 @@
 #ifndef EASYBOT_WINDOW_H
 #define EASYBOT_WINDOW_H
 
-#include <Windows.h>
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <easybot/internal/global.h>
 
 namespace eb {
+    // what do you think of this?
 class Window {
  public:
-  static std::string TITLE_MSCTFIME_UI;
-  static std::string TITLE_DEFAULT_IME;
-
+    // why you have two title?
  private:
   const static std::vector<std::string> VISIBLE_IGNORE_CLASS;
 
@@ -23,11 +22,23 @@ class Window {
   std::string title;
   std::string className;
   cv::Rect2i rect;
-  HWND hwnd;
-
-  explicit Window(HWND hwnd);
-
   std::vector<eb::Window> getSubWindows();
+
+  static bool findWindow(Window *out, const std::string &windowName);
+
+  /**
+   * Find first window match the processName and windowName exactly
+   * Caller close the resource.
+   * @param processName the processName, pass "" will search for all process.
+   * @param windowName the windowName
+   * @return nullptr if not find.
+   */
+  static bool findWindow(Window *out, const std::string &processName, std::string windowName);
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+  HWND hwnd;
+  explicit Window(HWND hwnd);
+#endif
 
   void refresh();
 

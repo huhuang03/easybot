@@ -3,7 +3,9 @@
 //
 
 #include "easybot/util/util_string.h"
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <Windows.h>
+#endif
 
 void eb::printAsHex(const std::string &str) {
   const char *c = str.data();
@@ -25,6 +27,7 @@ std::string eb::utf82gbk(const std::string &src) {
 }
 
 std::string eb::gbk2utf8(const char *src) {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   int len = MultiByteToWideChar(CP_ACP, 0, src, -1, nullptr, 0);
   auto wstr = new wchar_t[len]{0};
   MultiByteToWideChar(CP_ACP, 0, src, -1, wstr, len);
@@ -37,9 +40,12 @@ std::string eb::gbk2utf8(const char *src) {
   delete[] wstr;
   delete[] str;
   return rst;
+#endif
+  return "";
 }
 
 std::string eb::utf82gbk(const char *src) {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   int len = MultiByteToWideChar(CP_UTF8, 0, src, -1, nullptr, 0);
   auto wstr = new wchar_t[len + 1]{0};
   MultiByteToWideChar(CP_UTF8, 0, src, -1, wstr, len);
@@ -52,5 +58,7 @@ std::string eb::utf82gbk(const char *src) {
   delete[] wstr;
   delete[] str;
   return rst;
+#endif
+  return "";
 }
 
