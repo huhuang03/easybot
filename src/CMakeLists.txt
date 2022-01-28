@@ -11,7 +11,10 @@ target_include_directories(easybot PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOUR
 find_package(OpenCV REQUIRED)
 target_include_directories(easybot PRIVATE ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 
-target_link_libraries(easybot ${OpenCV_LIBS} dwmapi)
+target_link_libraries(easybot ${OpenCV_LIBS})
+if(WIN32)
+    target_link_libraries(easybot dwmapi)
+endif()
 
 # install target
 install(TARGETS easybot DESTINATION lib EXPORT easybotTargets)

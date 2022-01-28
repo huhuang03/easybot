@@ -254,3 +254,7 @@ std::ostream &eb::operator<<(std::ostream &out, const eb::Window &window) {
   out << window.str();
   return out;
 }
+
+bool eb::Window::isVisible() const {
+  return false;
+}

@@ -61,6 +61,8 @@ class Window {
 
   void screenshot(cv::OutputArray output);
 
+  bool isVisible() const;
+
   friend std::ostream &operator<<(std::ostream &out, const Window &window);
 };
 }

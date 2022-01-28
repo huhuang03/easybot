@@ -7,8 +7,6 @@
 #include "easybot/util/util_color.h"
 #include "easybot/util/util_keyboard.h"
 #include "easybot/util/util_string.h"
-#include "easybot/util/util_window.h"
-#include "easybot/util/util_process.h"
 #include "./window.h"
 #include "./process.h"
 #include "./model/hsv.h"
