@@ -10,6 +10,7 @@ eb::HSVRange::HSVRange(HSV h1, HSV h2) {
   this->_h2 = h2;
 }
 
+// why this effect in?
 void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
   out.create(in.size(), in.type());
   // ok, let's do something.
@@ -18,6 +19,7 @@ void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
 
   cv::Mat mask;
   if (!this->isHCrossBoundary()) {
+    std::cout << "_h1: " << this->_h1 << ", _h2: " << this->_h2  << std::endl;
     cv::inRange(hsv, this->_h1.toScale(), this->_h2.toScale(), mask);
   } else {
     cv::Mat mask1;
