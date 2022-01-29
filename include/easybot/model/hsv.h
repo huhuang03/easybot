@@ -47,6 +47,8 @@ class HSV {
   cv::Scalar toHMaxScale() const;
 
   friend std::ostream &operator<<(std::ostream &os, const HSV &thiz);
+
+  bool operator==(const HSV &other) const;
 };
 }
 

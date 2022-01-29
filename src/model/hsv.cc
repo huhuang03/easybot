@@ -55,3 +55,9 @@ std::ostream &eb::operator<<(std::ostream &os, const eb::HSV &thiz) {
   os << "(" << thiz.h() << ", " << thiz.s() << ", " << thiz.v() << ")";
   return os;
 }
+
+bool eb::HSV::operator==(const eb::HSV &other) const {
+  return this->_h == other._h
+      && this->_s == other._s
+      && this->_v == other._v;
+}

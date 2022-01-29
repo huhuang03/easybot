@@ -4,6 +4,7 @@
 #include <iostream>
 #include "./util_test.h"
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 HANDLE startNotepad() {
   PROCESS_INFORMATION pi;
 
@@ -33,4 +34,5 @@ HANDLE startNotepad() {
 void stopNotepad(HANDLE handle) {
   TerminateProcess(handle, 0);
 }
+#endif
 

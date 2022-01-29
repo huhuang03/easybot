@@ -33,6 +33,8 @@ class HSVRange {
 
   friend std::ostream &operator<<(std::ostream &os, const HSVRange &thiz);
 
+  bool operator==(const HSVRange &other) const;
+
 };
 }
 #endif //EASYBOT_HSV_RANGE_H

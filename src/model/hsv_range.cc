@@ -49,3 +49,8 @@ eb::HSV eb::HSVRange::h2() const {
 eb::HSV eb::HSVRange::h1() const {
   return this->_h1;
 }
+
+bool eb::HSVRange::operator==(const eb::HSVRange &other) const {
+  return this->_h1 == other._h1
+    && this->_h2 == other._h2;
+}
