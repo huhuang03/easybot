@@ -61,3 +61,11 @@ bool eb::HSV::operator==(const eb::HSV &other) const {
       && this->_s == other._s
       && this->_v == other._v;
 }
+
+bool eb::HSV::operator!=(const eb::HSV &other) const {
+  return !(*this == other);
+}
+
+cv::Vec3i eb::HSV::toVec() const {
+  return {this->_h, this->_s, this->_v};
+}

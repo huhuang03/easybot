@@ -45,10 +45,12 @@ class HSV {
   cv::Scalar toScale() const;
   cv::Scalar toHMinScale() const;
   cv::Scalar toHMaxScale() const;
+  cv::Vec3i toVec() const;
 
   friend std::ostream &operator<<(std::ostream &os, const HSV &thiz);
 
   bool operator==(const HSV &other) const;
+  bool operator!=(const HSV &other) const;
 };
 }
 

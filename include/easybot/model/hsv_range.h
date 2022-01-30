@@ -34,6 +34,7 @@ class HSVRange {
   friend std::ostream &operator<<(std::ostream &os, const HSVRange &thiz);
 
   bool operator==(const HSVRange &other) const;
+  bool operator!=(const HSVRange &other) const;
 
 };
 }

@@ -12,15 +12,15 @@ eb::HSVRange::HSVRange(HSV h1, HSV h2) {
 
 // why this effect in?
 void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
-  out.create(in.size(), in.type());
   // ok, let's do something.
   cv::Mat hsv;
-  cv::cvtColor(in, hsv, cv::COLOR_RGB2HSV);
+  cv::cvtColor(in, hsv, cv::COLOR_BGR2HSV);
 
   cv::Mat mask;
   if (!this->isHCrossBoundary()) {
-    std::cout << "_h1: " << this->_h1 << ", _h2: " << this->_h2  << std::endl;
-    cv::inRange(hsv, this->_h1.toScale(), this->_h2.toScale(), mask);
+    std::cout << "_h1: " << this->_h1.toVec() << ", _h2: " << this->_h2.toVec()  << std::endl;
+
+    cv::inRange(hsv, this->_h1.toVec(), this->_h2.toVec(), mask);
   } else {
     cv::Mat mask1;
     cv::inRange(hsv, this->_h1.toScale(), this->_h2.toHMaxScale(), mask1);
@@ -30,6 +30,7 @@ void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
 
     cv::bitwise_or(mask1, mask2, mask);
   }
+  // 那就是mask不对咯
   cv::bitwise_and(in, in, out, mask);
 }
 
@@ -53,4 +54,8 @@ eb::HSV eb::HSVRange::h1() const {
 bool eb::HSVRange::operator==(const eb::HSVRange &other) const {
   return this->_h1 == other._h1
     && this->_h2 == other._h2;
+}
+
+bool eb::HSVRange::operator!=(const eb::HSVRange &other) const {
+  return !(*this == other);
 }
