@@ -8,17 +8,27 @@
 #include "./window.h"
 #include <easybot/internal/global.h>
 
+#ifdef __APPLE__
+#include <libproc.h>
+#else
+#define pid_t DWORD
+#endif
+
 namespace eb {
 class Process {
  private:
-  DWORD pid;
+  pid_t _pid;
 
  public:
   static DWORD findProcessId(const std::string &processName);
-  static DWORD getBaseAddr(DWORD processId, const std::string &moduleName);
-  explicit Process(DWORD pid);
 
-  static DWORD PID_NOT_FOUND;
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+  static DWORD getBaseAddr(DWORD processId, const std::string &moduleName);
+#endif
+
+  explicit Process(pid_t pid);
+
+  static pid_t PID_NOT_FOUND;
 
   /**
    * return pid = 0 if not found
