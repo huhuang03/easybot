@@ -20,7 +20,12 @@ class Process {
   pid_t pid;
 
  public:
-  static DWORD findProcessId(const std::string &processName);
+
+  /**
+   * return pid = 0 if not found
+   */
+  static Process findByName(const std::string &name);
+  static pid_t findPidByName(const std::string &name);
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   static DWORD getBaseAddr(DWORD processId, const std::string &moduleName);
@@ -29,11 +34,6 @@ class Process {
   explicit Process(pid_t pid);
 
   static pid_t PID_NOT_FOUND;
-
-  /**
-   * return pid = 0 if not found
-   */
-  static Process findByName(const std::string &name);
 
   std::vector<eb::Window> getWindows(bool ignoreIME = true, bool ignoreToolTips = true);
 

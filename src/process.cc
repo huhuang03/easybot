@@ -8,7 +8,7 @@ namespace eb {
 pid_t Process::PID_NOT_FOUND = 0;
 
 eb::Process Process::findByName(const std::string &name) {
-  return eb::Process(findProcessId(name));
+  return eb::Process(findPidByName(name));
 }
 
 pid_t Process::getPid() {
@@ -148,4 +148,34 @@ eb::Window Process::getBiggestWindow() {
   }
   return rst;
 }
+
+pid_t Process::findPidByName(const std::string &name) {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+  auto thSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  if (!thSnap) {
+    return 0;
+  }
+  PROCESSENTRY32 pe;
+
+  // need close pe?
+  if (!Process32Next(thSnap, &pe)) {
+    CloseHandle(thSnap);
+    return 0;
+  }
+
+  do {
+    if (processName == pe.szExeFile) {
+      CloseHandle(thSnap);
+      return pe.th32ProcessID;
+    }
+  } while (Process32Next(thSnap, &pe));
+
+  CloseHandle(thSnap);
+  return 0;
+#endif
+
+  
+  return 0;
+}
+
 }

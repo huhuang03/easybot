@@ -3,16 +3,6 @@ FILE(GLOB_RECURSE
         ${CMAKE_CURRENT_SOURCE_DIR}/../include/*.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../include/*.hpp)
 
-#if(WIN32)
-#    list(FILTER SRC EXCLUDE REGEX "*mac_.*\\.cc")
-#else()
-#    message("not win")
-#    # looks like not work.
-#    list(FILTER SRC EXCLUDE REGEX ".*win_.*\\.cc")
-#endif()
-
-message(${SRC})
-
 add_library(easybot ${SRC})
 
 find_package(Boost REQUIRED)
