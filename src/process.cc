@@ -5,17 +5,17 @@
 #include "easybot/process.h"
 
 namespace eb {
-DWORD Process::PID_NOT_FOUND = 0;
+pid_t Process::PID_NOT_FOUND = 0;
 
 eb::Process Process::findByName(const std::string &name) {
   return eb::Process(findProcessId(name));
 }
 
-DWORD Process::getPid() {
+pid_t Process::getPid() {
   return this->pid;
 }
 
-Process::Process(DWORD pid) : pid(pid) {}
+Process::Process(pid_t pid) : pid(pid) {}
 
 struct EnumWindowsGetWindowsParam {
   std::vector<eb::Window> *rst;

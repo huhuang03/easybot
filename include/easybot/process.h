@@ -17,7 +17,7 @@
 namespace eb {
 class Process {
  private:
-  pid_t _pid;
+  pid_t pid;
 
  public:
   static DWORD findProcessId(const std::string &processName);
@@ -41,7 +41,7 @@ class Process {
   // But how can I do if I don't have any window. Throw an exception?
   eb::Window getBiggestWindow();
 
-  DWORD getPid();
+  pid_t getPid();
 };
 }
 
