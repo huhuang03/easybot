@@ -18,8 +18,7 @@ void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
 
   cv::Mat mask;
   if (!this->isHCrossBoundary()) {
-    std::cout << "_h1: " << this->_h1.toVec() << ", _h2: " << this->_h2.toVec()  << std::endl;
-
+//    std::cout << "_h1: " << this->_h1.toVec() << ", _h2: " << this->_h2.toVec()  << std::endl;
     cv::inRange(hsv, this->_h1.toVec(), this->_h2.toVec(), mask);
   } else {
     cv::Mat mask1;
