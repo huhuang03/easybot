@@ -26,6 +26,7 @@ class Process {
    */
   static Process findByName(const std::string &name);
   static pid_t findPidByName(const std::string &name);
+  static void printAllProcess();
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   static DWORD getBaseAddr(DWORD processId, const std::string &moduleName);

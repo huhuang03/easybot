@@ -3,6 +3,10 @@
 //
 
 #include "easybot/process.h"
+#include <string>
+#ifdef __APPLE__
+#include <libproc.h>
+#endif
 
 namespace eb {
 pid_t Process::PID_NOT_FOUND = 0;
@@ -103,11 +107,11 @@ std::vector<eb::Window> Process::getWindows(bool ignoreIME, bool ignoreToolTips)
     return allWindows;
   }
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   struct EnumWindowsGetWindowsParam param{
       &allWindows,
       this->pid,
   };
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   EnumWindows(enumWindowsGetWindows, reinterpret_cast<LPARAM>(&param));
 
   // remove or copy??
@@ -128,6 +132,23 @@ std::vector<eb::Window> Process::getWindows(bool ignoreIME, bool ignoreToolTips)
   }
   return rst;
 #endif
+
+  auto windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+  std::cout << "pid: " << this->pid << std::endl;
+  for (auto i = 0; i < CFArrayGetCount(windowList); i++) {
+    // how to do?
+    auto item = (CFDictionaryRef)CFArrayGetValueAtIndex(windowList, i);
+    pid_t _pid;
+    CFNumberGetValue((CFNumberRef)CFDictionaryGetValue(item, kCGWindowOwnerPID),
+                     kCFNumberSInt32Type, &_pid);
+    if (_pid == this->pid) {
+      CGWindowID wid;
+      CFNumberGetValue((CFNumberRef)CFDictionaryGetValue(item, kCGWindowNumber),
+                       kCFNumberSInt32Type, &wid);
+      allWindows.emplace_back(wid);
+    }
+  }
+  CFRelease(windowList);
   return allWindows;
 }
 
@@ -140,11 +161,10 @@ eb::Window Process::getBiggestWindow() {
   if (windows.empty()) {
     throw std::runtime_error("Has no any window in Process::getBiggestWindow");
   }
+
   auto rst = windows[0];
   for (const auto &window : windows) {
-    if (window.rect.width > rst.rect.width) {
-      rst = window;
-    }
+    rst = window;
   }
   return rst;
 }
@@ -174,8 +194,50 @@ pid_t Process::findPidByName(const std::string &name) {
   return 0;
 #endif
 
+  pid_t pids[1024];
+  int bytes = proc_listallpids(pids, sizeof(pids));
+  int nProc = bytes / int(sizeof(pids[0]));
+  for (int i = 0; i < nProc; i++) {
+    struct proc_bsdinfo proc{};
+    int st = proc_pidinfo(pids[i], PROC_PIDTBSDINFO, 0,
+                          &proc, PROC_PIDTBSDINFO_SIZE);
+    if (st == PROC_PIDTBSDINFO_SIZE) {
+//      std::cout << "proc name: " << proc.pbi_name << std::endl;
+      if (std::strcmp(name.c_str(), proc.pbi_name) == 0) {
+        return pids[i];
+      }
+    }
+  }
+
+  return Process::PID_NOT_FOUND;
+}
+
+void Process::printAllProcess() {
+  int length = 1024;
+  auto pids = new pid_t[length];
+  std::cout << sizeof(pids) << std::endl;
+  int bytes = proc_listallpids(pids, length * sizeof(pids[0]));
   
-  return 0;
+  while (bytes >= length) {
+    length *= 2;
+    delete []pids;
+
+    pids = new pid_t[length];
+    bytes = proc_listallpids(pids, length * sizeof(pids[0]));
+  }
+
+  if (bytes > 0) {
+    int nProc = bytes / int(sizeof(pids[0]));
+    for (int i = 0; i < nProc; i++) {
+      struct proc_bsdinfo proc{};
+      int st = proc_pidinfo(pids[i], PROC_PIDTBSDINFO, 0,
+                            &proc, PROC_PIDTBSDINFO_SIZE);
+      if (st == PROC_PIDTBSDINFO_SIZE) {
+        std::cout << "proc name: " << proc.pbi_name << std::endl;
+      }
+    }
+  }
+  delete []pids;
 }
 
 }

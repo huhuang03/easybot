@@ -16,6 +16,9 @@ target_include_directories(easybot PRIVATE ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUD
 target_link_libraries(easybot ${OpenCV_LIBS})
 if(WIN32)
     target_link_libraries(easybot dwmapi)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    find_library(ApplicationServices ApplicationServices)
+    target_link_libraries(easybot ${ApplicationServices})
 endif()
 
 # install target

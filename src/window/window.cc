@@ -5,6 +5,10 @@
 #include "easybot/window.h"
 #include "easybot/util/util_cv.h"
 
+#if __APPLE__
+#include <ApplicationServices/ApplicationServices.h>
+#endif
+
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <dwmapi.h>
 #include <WinUser.h>
@@ -248,6 +252,8 @@ void eb::Window::screenshot(const cv::_OutputArray &output) {
   #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   eb::screenshot(this->hwnd, output);
   #endif
+
+  auto imgRef = CGWindowListCreateImage(CGRectInfinite, kCGWindowListOptionOnScreenOnly, this->wid, kCGWindowImageDefault);
 }
 
 std::ostream &eb::operator<<(std::ostream &out, const eb::Window &window) {
@@ -257,4 +263,11 @@ std::ostream &eb::operator<<(std::ostream &out, const eb::Window &window) {
 
 bool eb::Window::isVisible() const {
   return false;
+}
+
+eb::Window::Window(wid_t _wid): wid(_wid) {
+}
+
+wid_t eb::Window::getId() {
+  return this->wid;
 }
