@@ -253,7 +253,37 @@ void eb::Window::screenshot(const cv::_OutputArray &output) {
   eb::screenshot(this->hwnd, output);
   #endif
 
-  auto imgRef = CGWindowListCreateImage(CGRectInfinite, kCGWindowListOptionOnScreenOnly, this->wid, kCGWindowImageDefault);
+  std::cout << "wid: " << wid << std::endl;
+  // how to do this?
+  auto imgRef = CGWindowListCreateImage(CGRectInfinite,
+                                        kCGWindowListOptionIncludingWindow | kCGWindowListExcludeDesktopElements,
+//                                        kCGWindowListOptionOnScreenOnly,
+                                        this->wid, kCGWindowImageDefault);
+  CGColorSpaceRef colorSpace = CGImageGetColorSpace(imgRef);
+
+  // width: 2880
+  // height: 1800
+  // 系统也是这么大
+  auto width = CGImageGetWidth(imgRef);
+  auto height = CGImageGetHeight(imgRef);
+  std::cout << "width: " << width << "height: " << height << std::endl;
+  cv::Mat cvMat(height, width, CV_8UC4); // 8 bits per component, 4 channels
+
+  CGContextRef contextRef = CGBitmapContextCreate(cvMat.data,                 // Pointer to backing data
+                                                  width,                      // Width of bitmap
+                                                  height,                     // Height of bitmap
+                                                  8,                          // Bits per component
+                                                  cvMat.step[0],              // Bytes per row
+                                                  colorSpace,                 // Colorspace
+                                                  kCGImageAlphaNoneSkipLast |
+                                                      kCGBitmapByteOrderDefault); // Bitmap info flags
+
+  CGContextDrawImage(contextRef, CGRectMake(0, 0, width, height), imgRef);
+  CGContextRelease(contextRef);
+  CGImageRelease(imgRef);
+  cv::imshow("img", cvMat);
+  cv::waitKey(0);
+//  std::cout << "imgRef: " << imgRef << std::endl;
 }
 
 std::ostream &eb::operator<<(std::ostream &out, const eb::Window &window) {

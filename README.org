@@ -8,3 +8,4 @@ And of cause, it's only work on win.
 - https://stackoverflow.com/questions/52061375/c-mac-screenshot-in-opencv
 - https://stackoverflow.com/questions/2919629/mac-os-x-linker-error-in-qt-coregraphics-cgwindowlistcreate
 - https://www.odszz.com/posts/macos-screensharing/
+- http://events.jianshu.io/p/b7ed025b061a
