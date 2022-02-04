@@ -288,16 +288,17 @@ void eb::Window::screenshot(const cv::_OutputArray &output) {
   // width: 2880
   // height: 1800
   // 系统也是这么大
+  // why 1600 and 1256??
   auto width = CGImageGetWidth(imgRef);
   auto height = CGImageGetHeight(imgRef);
-//  std::cout << "width: " << width << "height: " << height << std::endl;
-  cv::Mat cvMat(height, width, CV_8UC4); // 8 bits per component, 4 channels
+  std::cout << "width: " << width << "height: " << height << std::endl;
+  output.create(height, width, CV_8UC4);
 
-  CGContextRef contextRef = CGBitmapContextCreate(cvMat.data,                 // Pointer to backing data
+  CGContextRef contextRef = CGBitmapContextCreate(output.getMatRef().data,                 // Pointer to backing data
                                                   width,                      // Width of bitmap
                                                   height,                     // Height of bitmap
                                                   8,                          // Bits per component
-                                                  cvMat.step[0],              // Bytes per row
+                                                  output.getMatRef().step[0],              // Bytes per row
                                                   colorSpace,                 // Colorspace
                                                   kCGImageAlphaNoneSkipLast |
                                                       kCGBitmapByteOrderDefault); // Bitmap info flags
@@ -305,9 +306,8 @@ void eb::Window::screenshot(const cv::_OutputArray &output) {
   CGContextDrawImage(contextRef, CGRectMake(0, 0, width, height), imgRef);
   CGContextRelease(contextRef);
   CGImageRelease(imgRef);
-  cv::imshow("img", cvMat);
-  cv::waitKey(0);
-//  std::cout << "imgRef: " << imgRef << std::endl;
+
+  cv::cvtColor(output, output, cv::COLOR_RGB2BGR);
 }
 
 std::ostream &eb::operator<<(std::ostream &out, const eb::Window &window) {
