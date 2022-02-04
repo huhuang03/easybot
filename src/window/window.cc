@@ -32,10 +32,6 @@ BOOL enumChildWindowsGetSubWindows(HWND hwnd, LPARAM param) {
   return TRUE;
 }
 
-eb::Window::Window(HWND hwnd) : hwnd(hwnd) {
-  this->refresh();
-}
-
 static BOOL WINAPI enumWindowGetTopVisibleWindows(HWND hwnd, LPARAM param) {
   auto *windows = (std::vector<eb::Window> *) param;
   // should I check?
@@ -186,6 +182,32 @@ void eb::Window::refresh() {
   GetClassName(hwnd, cName, _countof(cName));
   this->className = std::string(cName);
 #endif
+
+#ifdef __APPLE__
+  CGWindowID ids[1] = {this->wid};
+  CFArrayRef idArray = CFArrayCreate(nullptr, (const void **) ids, 1, nullptr);
+  auto desc = CGWindowListCreateDescriptionFromArray(idArray);
+//  std::cout << "desc length: " << CFArrayGetCount(desc) << std::endl;
+  for (auto i = 0; i < CFArrayGetCount(desc); i++) {
+    auto item = (CFDictionaryRef)CFArrayGetValueAtIndex(desc, i);
+    if (CFDictionaryContainsKey(item, kCGWindowBounds)) {
+      auto bounds = (CFDictionaryRef)CFDictionaryGetValue(item, kCGWindowBounds);
+      CGRect _rect;
+      CGRectMakeWithDictionaryRepresentation(bounds, &_rect);
+      // how to get the bounds
+//      std::cout << "bounds: " << _rect.origin << std::endl;
+      this->rect.x = (int)_rect.origin.x;
+      this->rect.y = (int)_rect.origin.y;
+      this->rect.width = (int)_rect.size.width;
+      this->rect.height = (int)_rect.size.height;
+//      std::cout << "bounds: " << this->rect << std::endl;
+    } else {
+      std::cout << "no bounds" << std::endl;
+    }
+  }
+  CFRelease(desc);
+  CFRelease(idArray);
+#endif
 }
 
 
@@ -249,13 +271,15 @@ std::string eb::Window::getTitle() {
 }
 
 void eb::Window::screenshot(const cv::_OutputArray &output) {
+  this->refresh();
   #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   eb::screenshot(this->hwnd, output);
   #endif
 
-  std::cout << "wid: " << wid << std::endl;
+//  std::cout << "wid: " << wid << std::endl;
   // how to do this?
-  auto imgRef = CGWindowListCreateImage(CGRectInfinite,
+  auto imgRef = CGWindowListCreateImage(CGRect{
+    (double)rect.x, (double)rect.y, (double)rect.width, (double)rect.height},
                                         kCGWindowListOptionIncludingWindow | kCGWindowListExcludeDesktopElements,
 //                                        kCGWindowListOptionOnScreenOnly,
                                         this->wid, kCGWindowImageDefault);
@@ -266,7 +290,7 @@ void eb::Window::screenshot(const cv::_OutputArray &output) {
   // 系统也是这么大
   auto width = CGImageGetWidth(imgRef);
   auto height = CGImageGetHeight(imgRef);
-  std::cout << "width: " << width << "height: " << height << std::endl;
+//  std::cout << "width: " << width << "height: " << height << std::endl;
   cv::Mat cvMat(height, width, CV_8UC4); // 8 bits per component, 4 channels
 
   CGContextRef contextRef = CGBitmapContextCreate(cvMat.data,                 // Pointer to backing data
@@ -296,6 +320,7 @@ bool eb::Window::isVisible() const {
 }
 
 eb::Window::Window(wid_t _wid): wid(_wid) {
+//  this->refresh();
 }
 
 wid_t eb::Window::getId() {

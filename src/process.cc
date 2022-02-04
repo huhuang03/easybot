@@ -134,7 +134,7 @@ std::vector<eb::Window> Process::getWindows(bool ignoreIME, bool ignoreToolTips)
 #endif
 
   auto windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
-  std::cout << "pid: " << this->pid << std::endl;
+//  std::cout << "pid: " << this->pid << std::endl;
   for (auto i = 0; i < CFArrayGetCount(windowList); i++) {
     // how to do?
     auto item = (CFDictionaryRef)CFArrayGetValueAtIndex(windowList, i);
@@ -164,6 +164,7 @@ eb::Window Process::getBiggestWindow() {
 
   auto rst = windows[0];
   for (const auto &window : windows) {
+    // so this has a copy construct
     rst = window;
   }
   return rst;

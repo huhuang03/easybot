@@ -18,7 +18,7 @@ TEST(ProcessTest, testFindByName) {
 //  stopNotepad(h);
   // how to do this?
   auto pid = eb::Process::findPidByName("TextEdit");
-  std::cout << "pid: " << pid << std::endl;
+//  std::cout << "pid: " << pid << std::endl;
 }
 
 TEST(ProcessTest, testGetWindow) {
