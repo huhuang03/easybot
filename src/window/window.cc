@@ -289,8 +289,8 @@ void eb::Window::screenshot(const cv::_OutputArray &output) {
   // height: 1800
   // 系统也是这么大
   // why 1600 and 1256??
-  auto width = CGImageGetWidth(imgRef);
-  auto height = CGImageGetHeight(imgRef);
+  auto width = CGImageGetWidth(imgRef) / 2;
+  auto height = CGImageGetHeight(imgRef) / 2;
   std::cout << "width: " << width << "height: " << height << std::endl;
   output.create(height, width, CV_8UC4);
 
@@ -325,4 +325,79 @@ eb::Window::Window(wid_t _wid): wid(_wid) {
 
 wid_t eb::Window::getId() {
   return this->wid;
+}
+
+/**
+ * Converts a CFString to a UTF-8 std::string if possible.
+ *
+ * @param input A reference to the CFString to convert.
+ * @return Returns a std::string containing the contents of CFString converted to UTF-8. Returns
+ *  an empty string if the input reference is null or conversion is not possible.
+ */
+static std::string cfStringToStdString(CFStringRef input)
+{
+  if (!input)
+    return {};
+
+  // Attempt to access the underlying buffer directly. This only works if no conversion or
+  //  internal allocation is required.
+  auto originalBuffer{ CFStringGetCStringPtr(input, kCFStringEncodingUTF8) };
+  if (originalBuffer)
+    return originalBuffer;
+
+  // Copy the data out to a local buffer.
+  auto lengthInUtf16{ CFStringGetLength(input) };
+  auto maxLengthInUtf8{ CFStringGetMaximumSizeForEncoding(lengthInUtf16,
+                                                          kCFStringEncodingUTF8) + 1 }; // <-- leave room for null terminator
+  std::vector<char> localBuffer(maxLengthInUtf8);
+
+  if (CFStringGetCString(input, localBuffer.data(), maxLengthInUtf8, maxLengthInUtf8))
+    return localBuffer.data();
+
+  return {};
+}
+
+void eb::Window::printAllWindow() {
+#ifdef __APPLE__
+  auto windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
+//  std::cout << "pid: " << this->pid << std::endl;
+  for (auto i = 0; i < CFArrayGetCount(windowList); i++) {
+    // how to do?
+    std::cout << "Window: ";
+    auto item = (CFDictionaryRef)CFArrayGetValueAtIndex(windowList, i);
+    pid_t _pid;
+    CFNumberGetValue((CFNumberRef)CFDictionaryGetValue(item, kCGWindowOwnerPID),
+                     kCFNumberSInt32Type, &_pid);
+    CGWindowID wid;
+    CFNumberGetValue((CFNumberRef)CFDictionaryGetValue(item, kCGWindowNumber),
+                     kCFNumberSInt32Type, &wid);
+    std::cout << "id: " << wid;
+
+    auto bounds = (CFDictionaryRef)CFDictionaryGetValue(item, kCGWindowBounds);
+    CGRect _rect;
+    CGRectMakeWithDictionaryRepresentation(bounds, &_rect);
+    std::cout << ", bounds: (" << _rect.origin.x << ", " << _rect.origin.y << " " << _rect.size.width << "x" << _rect.size.height << ")";
+
+    auto printStringItem = [](CFDictionaryRef item, const void *key, const std::string &_title) {
+      if (CFDictionaryContainsKey(item, key)) {
+        std::cout << ", " << _title << ": ";
+        auto value = (CFStringRef)CFDictionaryGetValue(item, key);
+        char buffer[1024];
+        const char *ptr = CFStringGetCStringPtr(value, kCFStringEncodingMacRoman);
+        if (ptr) {
+          std::cout << ptr;
+        } else {
+          std::cout << "no string";
+        };
+//        std::cout << cfStringToStdString(value) << std::endl;
+      }
+    };
+
+    printStringItem(item, kCGWindowName, "windowName");
+    printStringItem(item, kCGWindowOwnerName, "windowOwnerName");
+
+    std::cout << std::endl;
+  }
+  CFRelease(windowList);
+#endif
 }

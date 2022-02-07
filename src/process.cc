@@ -216,7 +216,6 @@ pid_t Process::findPidByName(const std::string &name) {
 void Process::printAllProcess() {
   int length = 1024;
   auto pids = new pid_t[length];
-  std::cout << sizeof(pids) << std::endl;
   int bytes = proc_listallpids(pids, length * sizeof(pids[0]));
   
   while (bytes >= length) {
@@ -229,12 +228,15 @@ void Process::printAllProcess() {
 
   if (bytes > 0) {
     int nProc = bytes / int(sizeof(pids[0]));
+    std::cout << "count: " << nProc << std::endl;
     for (int i = 0; i < nProc; i++) {
       struct proc_bsdinfo proc{};
       int st = proc_pidinfo(pids[i], PROC_PIDTBSDINFO, 0,
                             &proc, PROC_PIDTBSDINFO_SIZE);
       if (st == PROC_PIDTBSDINFO_SIZE) {
         std::cout << "proc name: " << proc.pbi_name << std::endl;
+      } else {
+        std::cout << "size: " << st << std::endl;
       }
     }
   }

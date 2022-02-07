@@ -33,6 +33,9 @@ class Window {
   std::string className;
   cv::Rect2i rect;
   std::vector<eb::Window> getSubWindows();
+
+  static void printAllWindow();
+
   static bool findWindow(Window *out, const std::string &windowName);
 
   /**

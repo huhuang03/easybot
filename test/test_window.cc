@@ -7,6 +7,10 @@
 #include <easybot/window.h>
 #include <easybot/process.h>
 
+TEST(WindowTest, printAllWindows) {
+  eb::Window::printAllWindow();
+}
+
 TEST(WindowTest, snapshot) {
   auto p = eb::Process::findByName("TextEdit");
   auto window = p.getBiggestWindow();
