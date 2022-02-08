@@ -228,13 +228,15 @@ void Process::printAllProcess() {
 
   if (bytes > 0) {
     int nProc = bytes / int(sizeof(pids[0]));
-    std::cout << "count: " << nProc << std::endl;
+    std::cout << "Process(" << nProc << ")" << ": " << nProc << std::endl;
     for (int i = 0; i < nProc; i++) {
       struct proc_bsdinfo proc{};
       int st = proc_pidinfo(pids[i], PROC_PIDTBSDINFO, 0,
                             &proc, PROC_PIDTBSDINFO_SIZE);
+      std::cout << "id: " << pids[i] << ", ";
       if (st == PROC_PIDTBSDINFO_SIZE) {
-        std::cout << "proc name: " << proc.pbi_name << std::endl;
+        std::cout << "comm: " << proc.pbi_comm << ", ";
+        std::cout << "name: " << proc.pbi_name << std::endl;
       } else {
         std::cout << "size: " << st << std::endl;
       }
