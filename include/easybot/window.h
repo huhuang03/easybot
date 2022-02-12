@@ -12,6 +12,7 @@
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <Windows.h>
+#define wid_t HWND
 #elif defined(__APPLE__)
 #include <ApplicationServices/ApplicationServices.h>
 #include <CoreGraphics/CGWindow.h>
@@ -47,12 +48,7 @@ class Window {
    */
   static bool findWindow(Window *out, const std::string &processName, std::string windowName);
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-  HWND hwnd;
-  explicit Window(HWND hwnd);
-#endif
-
-  wid_t getId();
+  wid_t getId() const;
 
   void refresh();
 
@@ -78,6 +74,11 @@ class Window {
   bool isVisible() const;
 
   friend std::ostream &operator<<(std::ostream &out, const Window &window);
+
+  /**
+   * 是否是Ime之类的不可见窗口。暂时旨在windows上判断
+   */
+  bool isImeStaff() const;
 };
 }
 

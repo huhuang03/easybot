@@ -6,6 +6,8 @@
 #include <string>
 #ifdef __APPLE__
 #include <libproc.h>
+#else
+#include <TlHelp32.h>
 #endif
 
 namespace eb {
@@ -28,36 +30,36 @@ struct EnumWindowsGetWindowsParam {
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 
-/**
- * Strange, I remember I have write this method once?
- * @param processName
- * @return
- */
-DWORD eb::findProcessId(const std::string &processName) {
-  auto thSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-  if (!thSnap) {
-    return 0;
-  }
-  PROCESSENTRY32 pe;
+///**
+// * Strange, I remember I have write this method once?
+// * @param processName
+// * @return
+// */
+//DWORD findProcessId(const std::string &processName) {
+//  auto thSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+//  if (!thSnap) {
+//    return 0;
+//  }
+//  PROCESSENTRY32 pe;
+//
+//  // need close pe?
+//  if (!Process32Next(thSnap, &pe)) {
+//    CloseHandle(thSnap);
+//    return 0;
+//  }
+//
+//  do {
+//    if (processName == pe.szExeFile) {
+//      CloseHandle(thSnap);
+//      return pe.th32ProcessID;
+//    }
+//  } while (Process32Next(thSnap, &pe));
+//
+//  CloseHandle(thSnap);
+//  return 0;
+//}
 
-  // need close pe?
-  if (!Process32Next(thSnap, &pe)) {
-    CloseHandle(thSnap);
-    return 0;
-  }
-
-  do {
-    if (processName == pe.szExeFile) {
-      CloseHandle(thSnap);
-      return pe.th32ProcessID;
-    }
-  } while (Process32Next(thSnap, &pe));
-
-  CloseHandle(thSnap);
-  return 0;
-}
-
-DWORD eb::getBaseAddr(DWORD processId, const std::string &moduleName) {
+DWORD getBaseAddr(DWORD processId, const std::string &moduleName) {
   if (processId <= 0) {
     return 0;
   }
@@ -118,8 +120,7 @@ std::vector<eb::Window> Process::getWindows(bool ignoreIME, bool ignoreToolTips)
   std::vector<eb::Window> rst;
   for (const auto &w : allWindows) {
     if (ignoreIME) {
-      if (w.title == eb::Window::TITLE_MSCTFIME_UI
-          || w.title == eb::Window::TITLE_DEFAULT_IME) {
+      if (w.isImeStaff()) {
         continue;
       }
     }
@@ -131,8 +132,7 @@ std::vector<eb::Window> Process::getWindows(bool ignoreIME, bool ignoreToolTips)
     rst.push_back(w);
   }
   return rst;
-#endif
-
+#else
   auto windowList = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly, kCGNullWindowID);
 //  std::cout << "pid: " << this->pid << std::endl;
   for (auto i = 0; i < CFArrayGetCount(windowList); i++) {
@@ -150,6 +150,8 @@ std::vector<eb::Window> Process::getWindows(bool ignoreIME, bool ignoreToolTips)
   }
   CFRelease(windowList);
   return allWindows;
+#endif
+
 }
 
 eb::Window Process::getBiggestWindow() {
@@ -185,7 +187,7 @@ pid_t Process::findPidByName(const std::string &name) {
   }
 
   do {
-    if (processName == pe.szExeFile) {
+    if (name == pe.szExeFile) {
       CloseHandle(thSnap);
       return pe.th32ProcessID;
     }
@@ -193,8 +195,7 @@ pid_t Process::findPidByName(const std::string &name) {
 
   CloseHandle(thSnap);
   return 0;
-#endif
-
+#else
   pid_t pids[1024];
   int bytes = proc_listallpids(pids, sizeof(pids));
   int nProc = bytes / int(sizeof(pids[0]));
@@ -211,9 +212,12 @@ pid_t Process::findPidByName(const std::string &name) {
   }
 
   return Process::PID_NOT_FOUND;
+#endif
+
 }
 
 void Process::printAllProcess() {
+#ifdef __APPLE__
   int length = 1024;
   auto pids = new pid_t[length];
   int bytes = proc_listallpids(pids, length * sizeof(pids[0]));
@@ -243,6 +247,7 @@ void Process::printAllProcess() {
     }
   }
   delete []pids;
+#endif
 }
 
 }

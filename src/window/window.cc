@@ -2,8 +2,9 @@
 // Created by huhua on 2021/8/25.
 //
 
-#include "easybot/window.h"
-#include "easybot/util/util_cv.h"
+#include <easybot/window.h>
+#include <easybot/util/util_cv.h>
+#include <easybot/util/util_string.h>
 
 #if __APPLE__
 #include <ApplicationServices/ApplicationServices.h>
@@ -70,42 +71,6 @@ static BOOL CALLBACK enumFindWindow(HWND hwnd, LPARAM param) {
   return TRUE;
 }
 
-HWND eb::findWindow(const std::string &processName, std::string windowName) {
-  auto thSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-  if (!thSnap) {
-    return nullptr;
-  }
-  PROCESSENTRY32 pe;
-
-  // need close pe?
-  if (!Process32Next(thSnap, &pe)) {
-    return nullptr;
-  }
-
-  const bool ignoreName = processName.empty();
-
-  HWND rst = nullptr;
-  do {
-    if (ignoreName || processName == pe.szExeFile) {
-      // ok, we find the process
-      // but how can we get the window?
-      struct ParamEnumFindWindow param{
-          pe.th32ProcessID,
-          &windowName,
-          &rst
-      };
-      EnumWindows(enumFindWindow, reinterpret_cast<LPARAM>(&param));
-    }
-  } while (Process32Next(thSnap, &pe));
-
-  CloseHandle(thSnap);
-  return rst;
-}
-
-HWND eb::findWindow(const std::string &windowName) {
-  return eb::findWindow("", windowName);
-}
-
 static void getMat(HWND hWND, cv::OutputArray out) {
   HDC deviceContext = GetDC(hWND);
   HDC memoryDeviceContext = CreateCompatibleDC(deviceContext);
@@ -148,10 +113,6 @@ static void getMat(HWND hWND, cv::OutputArray out) {
   DeleteDC(memoryDeviceContext); //delete not release!
   ReleaseDC(hWND, deviceContext);
 }
-
-void eb::screenshot(HWND hwnd, cv::OutputArray out) {
-  getMat(hwnd, out);
-}
 #endif
 
 std::vector<eb::Window> eb::Window::getSubWindows() {
@@ -161,7 +122,7 @@ std::vector<eb::Window> eb::Window::getSubWindows() {
   };
 
   #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-  EnumChildWindows(this->hwnd, enumChildWindowsGetSubWindows, reinterpret_cast<LPARAM>(&param));
+  EnumChildWindows(this->getId(), enumChildWindowsGetSubWindows, reinterpret_cast<LPARAM>(&param));
   #endif
   return rst;
 }
@@ -169,17 +130,17 @@ std::vector<eb::Window> eb::Window::getSubWindows() {
 
 void eb::Window::refresh() {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-  if (this->hwnd == nullptr) {
+  if (this->getId() == nullptr) {
     return;
   }
   this->title = this->getTitle();
 
   RECT r;
-  GetWindowRect(this->hwnd, &r);
+  GetWindowRect(this->getId(), &r);
   this->rect = rectWin2cv(r);
 
   TCHAR cName[MAX_PATH + 1];
-  GetClassName(hwnd, cName, _countof(cName));
+  GetClassName(this->getId(), cName, _countof(cName));
   this->className = std::string(cName);
 #endif
 
@@ -221,7 +182,8 @@ std::vector<eb::Window> eb::Window::getTopVisibleWindows() {
 
 bool eb::Window::isTopLevel() const {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-  return this->hwnd == GetAncestor(this->hwnd, GA_ROOT);
+  // error C2662: “HWND eb::Window::getId(void)”: 不能将“this”指针从“const eb::Window”转换为“eb::Window &”
+  return this->getId() == GetAncestor(this->getId(), GA_ROOT);
 #endif
   return false;
 }
@@ -233,7 +195,7 @@ std::string eb::Window::str() const {
 bool eb::Window::isCloaked() const {
   #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   BOOL isCloaked = FALSE;
-  return SUCCEEDED(DwmGetWindowAttribute(hwnd, DWMWA_CLOAKED,
+  return SUCCEEDED(DwmGetWindowAttribute(this->getId(), DWMWA_CLOAKED,
                                          &isCloaked, sizeof(isCloaked))) && isCloaked;
   #endif
   return false;
@@ -250,18 +212,18 @@ bool eb::Window::isInScreen() const {
   if (this->rect.width == 0 || this->rect.height == 0) {
     return false;
   }
-  return !IsIconic(hwnd) && IsWindowVisible(hwnd);
+  return !IsIconic(getId()) && IsWindowVisible(getId());
 #endif
   return false;
 }
 
 std::string eb::Window::getTitle() {
   #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-  auto len = GetWindowTextLength(hwnd);
+  auto len = GetWindowTextLength(getId());
   auto pszMem = (PSTR) VirtualAlloc((LPVOID) NULL,
                                     (DWORD) (len + 1), MEM_COMMIT,
                                     PAGE_READWRITE);
-  GetWindowText(hwnd, pszMem,
+  GetWindowText(getId(), pszMem,
                 len + 1);
   auto rst = std::string(pszMem);
   VirtualFree(pszMem, (DWORD) (len + 1), MEM_DECOMMIT);
@@ -273,11 +235,8 @@ std::string eb::Window::getTitle() {
 void eb::Window::screenshot(const cv::_OutputArray &output) {
   this->refresh();
   #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-  eb::screenshot(this->hwnd, output);
-  #endif
-
-//  std::cout << "wid: " << wid << std::endl;
-  // how to do this?
+  getMat(getId(), output);
+  #else
   auto imgRef = CGWindowListCreateImage(CGRect{
     (double)rect.x, (double)rect.y, (double)rect.width, (double)rect.height},
                                         kCGWindowListOptionIncludingWindow | kCGWindowListExcludeDesktopElements,
@@ -308,6 +267,7 @@ void eb::Window::screenshot(const cv::_OutputArray &output) {
   CGImageRelease(imgRef);
 
   cv::cvtColor(output, output, cv::COLOR_RGB2BGR);
+  #endif
 }
 
 std::ostream &eb::operator<<(std::ostream &out, const eb::Window &window) {
@@ -323,10 +283,11 @@ eb::Window::Window(wid_t _wid): wid(_wid) {
 //  this->refresh();
 }
 
-wid_t eb::Window::getId() {
+wid_t eb::Window::getId() const {
   return this->wid;
 }
 
+#ifdef __APPLE__
 /**
  * Converts a CFString to a UTF-8 std::string if possible.
  *
@@ -356,6 +317,7 @@ static std::string cfStringToStdString(CFStringRef input)
 
   return {};
 }
+#endif
 
 void eb::Window::printAllWindow() {
 #ifdef __APPLE__
@@ -399,5 +361,51 @@ void eb::Window::printAllWindow() {
     std::cout << std::endl;
   }
   CFRelease(windowList);
+#endif
+}
+
+bool eb::Window::findWindow(eb::Window *out, const std::string &processName, std::string windowName) {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+//  auto thSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+//  if (!thSnap) {
+//    return nullptr;
+//  }
+//  PROCESSENTRY32 pe;
+//
+//  // need close pe?
+//  if (!Process32Next(thSnap, &pe)) {
+//    return nullptr;
+//  }
+//
+//  const bool ignoreName = processName.empty();
+//
+//  HWND rst = nullptr;
+//  do {
+//    if (ignoreName || processName == pe.szExeFile) {
+//      // ok, we find the process
+//      // but how can we get the window?
+//      struct ParamEnumFindWindow param{
+//          pe.th32ProcessID,
+//          &windowName,
+//          &rst
+//      };
+//      EnumWindows(enumFindWindow, reinterpret_cast<LPARAM>(&param));
+//    }
+//  } while (Process32Next(thSnap, &pe));
+//
+//  CloseHandle(thSnap);
+  // right that use this tec??
+#endif
+  return false;
+}
+bool eb::Window::findWindow(eb::Window *out, const std::string &windowName) {
+  return false;
+}
+
+bool eb::Window::isImeStaff() const {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+  return this->title == TITLE_MSCTFIME_UI || this->title == TITLE_DEFAULT_IME;
+#else:
+    return false;
 #endif
 }
