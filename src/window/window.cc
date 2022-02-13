@@ -160,10 +160,10 @@ void eb::Window::refresh() {
       CGRectMakeWithDictionaryRepresentation(bounds, &_rect);
       // how to get the bounds
 //      std::cout << "bounds: " << _rect.origin << std::endl;
-      this->rect.x = (int)_rect.origin.x;
-      this->rect.y = (int)_rect.origin.y;
-      this->rect.width = (int)_rect.size.width;
-      this->rect.height = (int)_rect.size.height;
+      this->_rect.x = (int)_rect.origin.x;
+      this->_rect.y = (int)_rect.origin.y;
+      this->_rect.width = (int)_rect.size.width;
+      this->_rect.height = (int)_rect.size.height;
 //      std::cout << "bounds: " << this->rect << std::endl;
     } else {
       std::cout << "no bounds" << std::endl;
@@ -245,7 +245,7 @@ void eb::Window::screenshot(const cv::_OutputArray &output, int scale) {
   getMat(getId(), output, scale);
   #else
   auto imgRef = CGWindowListCreateImage(CGRect{
-    (double)rect.x, (double)rect.y, (double)rect.width, (double)rect.height},
+    (double)_rect.x, (double)_rect.y, (double)_rect.width, (double)_rect.height},
                                         kCGWindowListOptionIncludingWindow | kCGWindowListExcludeDesktopElements,
 //                                        kCGWindowListOptionOnScreenOnly,
                                         this->wid, kCGWindowImageDefault);
@@ -431,5 +431,9 @@ bool eb::Window::isNormalWindow() {
 }
 
 bool eb::Window::isEnable() const {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   return IsWindowEnabled(this->wid);
+#else
+  return true;
+#endif
 }
