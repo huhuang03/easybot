@@ -27,13 +27,16 @@ class Window {
  private:
   const static std::vector<std::string> VISIBLE_IGNORE_CLASS;
   wid_t wid;
+  cv::Rect2i _rect;
 
  public:
-  Window(wid_t _wid);
+  explicit Window(wid_t _wid);
+//  ~Window();
   std::string title;
   std::string className;
-  cv::Rect2i rect;
+  cv::Rect2i rect(bool forceRefresh = false);
   std::vector<eb::Window> getSubWindows();
+  bool isEnable() const;
 
   static void printAllWindow();
 
@@ -69,11 +72,19 @@ class Window {
    */
   std::string getTitle();
 
-  void screenshot(cv::OutputArray output);
-
-  bool isVisible() const;
+  /**
+   * Why you can't find?
+   */
+  void screenshot(cv::OutputArray output, int scale = 1);
 
   friend std::ostream &operator<<(std::ostream &out, const Window &window);
+
+  /**
+   * A normal window means
+   */
+  bool isNormalWindow();
+
+  bool isVisible();
 
   /**
    * 是否是Ime之类的不可见窗口。暂时旨在windows上判断

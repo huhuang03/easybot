@@ -71,15 +71,18 @@ static BOOL CALLBACK enumFindWindow(HWND hwnd, LPARAM param) {
   return TRUE;
 }
 
-static void getMat(HWND hWND, cv::OutputArray out) {
+/**
+ * @param scale 有些高分辨率上乘了scale倍
+ */
+static void getMat(HWND hWND, cv::OutputArray out, int scale = 1) {
   HDC deviceContext = GetDC(hWND);
   HDC memoryDeviceContext = CreateCompatibleDC(deviceContext);
 
   RECT windowRect;
   GetClientRect(hWND, &windowRect);
 
-  int height = windowRect.bottom;
-  int width = windowRect.right;
+  int height = windowRect.bottom / scale;
+  int width = windowRect.right / scale;
 
   HBITMAP bitmap = CreateCompatibleBitmap(deviceContext, width, height);
 
@@ -137,7 +140,7 @@ void eb::Window::refresh() {
 
   RECT r;
   GetWindowRect(this->getId(), &r);
-  this->rect = rectWin2cv(r);
+  this->_rect = rectWin2cv(r);
 
   TCHAR cName[MAX_PATH + 1];
   GetClassName(this->getId(), cName, _countof(cName));
@@ -189,7 +192,11 @@ bool eb::Window::isTopLevel() const {
 }
 
 std::string eb::Window::str() const {
-  return "Window(title: " + this->title + ", rect: " + eb::to_string(this->rect) + ")";
+  return "Window("
+         "title: " + this->title
+         + ", rect: " + eb::to_string(this->_rect)
+         + ", enable: " + std::to_string(this->isEnable())
+         + ")";
 }
 
 bool eb::Window::isCloaked() const {
@@ -209,7 +216,7 @@ bool eb::Window::isInScreen() const {
   if (std::count(Window::VISIBLE_IGNORE_CLASS.begin(), Window::VISIBLE_IGNORE_CLASS.end(), this->className)) {
     return false;
   }
-  if (this->rect.width == 0 || this->rect.height == 0) {
+  if (this->_rect.width == 0 || this->_rect.height == 0) {
     return false;
   }
   return !IsIconic(getId()) && IsWindowVisible(getId());
@@ -232,10 +239,10 @@ std::string eb::Window::getTitle() {
   return "";
 }
 
-void eb::Window::screenshot(const cv::_OutputArray &output) {
+void eb::Window::screenshot(const cv::_OutputArray &output, int scale) {
   this->refresh();
   #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-  getMat(getId(), output);
+  getMat(getId(), output, scale);
   #else
   auto imgRef = CGWindowListCreateImage(CGRect{
     (double)rect.x, (double)rect.y, (double)rect.width, (double)rect.height},
@@ -275,11 +282,12 @@ std::ostream &eb::operator<<(std::ostream &out, const eb::Window &window) {
   return out;
 }
 
-bool eb::Window::isVisible() const {
-  return false;
+bool eb::Window::isVisible() {
+  this->refresh();
+  return this->_rect.width > 0 && this->_rect.height > 0;
 }
 
-eb::Window::Window(wid_t _wid): wid(_wid) {
+eb::Window::Window(wid_t _wid): wid(_wid), title(""),  className("") {
 //  this->refresh();
 }
 
@@ -404,8 +412,24 @@ bool eb::Window::findWindow(eb::Window *out, const std::string &windowName) {
 
 bool eb::Window::isImeStaff() const {
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+//  std::cout << "title: " << this->title << ", this->title == TITLE_MSCTFIME_UI: " << (this->title == TITLE_MSCTFIME_UI) << std::endl;
   return this->title == TITLE_MSCTFIME_UI || this->title == TITLE_DEFAULT_IME;
-#else:
+#else
     return false;
 #endif
+}
+
+cv::Rect2i eb::Window::rect(bool forceRefresh) {
+  if (forceRefresh || this->_rect.width == 0 || this->_rect.height == 0) {
+    this->refresh();
+  }
+  return this->_rect;
+}
+
+bool eb::Window::isNormalWindow() {
+  return this->isEnable() && this->isVisible() && !this->isImeStaff();
+}
+
+bool eb::Window::isEnable() const {
+  return IsWindowEnabled(this->wid);
 }

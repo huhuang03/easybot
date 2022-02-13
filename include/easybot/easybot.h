@@ -4,9 +4,10 @@
 
 #ifndef EASYBOT_EASYBOT_H
 #define EASYBOT_EASYBOT_H
-#include "easybot/util/util_color.h"
-#include "easybot/util/util_keyboard.h"
-#include "easybot/util/util_string.h"
+#include "./util/util_color.h"
+#include "./util/util_keyboard.h"
+#include "./util/util_string.h"
+#include "./util/util_comm.h"
 #include "./window.h"
 #include "./process.h"
 #include "./model/hsv.h"

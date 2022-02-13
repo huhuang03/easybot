@@ -36,7 +36,8 @@ class Process {
 
   static pid_t PID_NOT_FOUND;
 
-  std::vector<eb::Window> getWindows(bool ignoreIME = true, bool ignoreToolTips = true);
+  std::vector<eb::Window> getWindows(bool onlyNormal = true);
+  void printAllWindow();
 
   // I want design a function that return the biggest window in this process.
   // But how can I do if I don't have any window. Throw an exception?

@@ -97,13 +97,18 @@ static BOOL CALLBACK enumWindowsGetWindows(HWND hwnd, LPARAM param) {
   GetWindowThreadProcessId(hwnd, &processId);
   if (processId == config->pid) {
     // throw exception at here?
+//    std::cout << "11 pid: " << config->pid << std::endl;
+//    std::cout << "11 hwnd: " << hwnd << std::endl;
+//    std::cout << "11 rst: " << config->rst << std::endl;
+//    eb::Window w(hwnd);
+//    std::cout << "1111" << std::endl;
     config->rst->push_back(eb::Window(hwnd));
   }
   return TRUE;
 }
 #endif
 
-std::vector<eb::Window> Process::getWindows(bool ignoreIME, bool ignoreToolTips) {
+std::vector<eb::Window> Process::getWindows(bool onlyNormal) {
   std::vector<eb::Window> allWindows;
   if (this->pid == PID_NOT_FOUND) {
     return allWindows;
@@ -118,13 +123,12 @@ std::vector<eb::Window> Process::getWindows(bool ignoreIME, bool ignoreToolTips)
 
   // remove or copy??
   std::vector<eb::Window> rst;
-  for (const auto &w : allWindows) {
-    if (ignoreIME) {
-      if (w.isImeStaff()) {
+  for (auto &w : allWindows) {
+    w.refresh();
+    if (onlyNormal) {
+      if (!w.isNormalWindow()) {
         continue;
       }
-    }
-    if (ignoreToolTips) {
       if (w.className == "tooltips_class32") {
         continue;
       }
@@ -165,9 +169,13 @@ eb::Window Process::getBiggestWindow() {
   }
 
   auto rst = windows[0];
-  for (const auto &window : windows) {
+  for (auto &window : windows) {
     // so this has a copy construct
-    rst = window;
+    auto rstSize = rst.rect();
+    auto winSize = window.rect();
+    if (winSize.width > rstSize.width || winSize.height > rstSize.height) {
+      rst = window;
+    }
   }
   return rst;
 }
@@ -221,7 +229,7 @@ void Process::printAllProcess() {
   int length = 1024;
   auto pids = new pid_t[length];
   int bytes = proc_listallpids(pids, length * sizeof(pids[0]));
-  
+
   while (bytes >= length) {
     length *= 2;
     delete []pids;
@@ -250,4 +258,12 @@ void Process::printAllProcess() {
 #endif
 }
 
+void Process::printAllWindow() {
+  auto windows = getWindows();
+  std::cout << "Process(" << this->pid << ") windows:" << std::endl;
+  for (auto &win: windows) {
+    win.refresh();
+    std::cout << "\twin: " << win << std::endl;
+  }
+}
 }
