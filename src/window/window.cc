@@ -108,8 +108,9 @@ static void getMat(HWND hWND, cv::OutputArray out, int scale = 1) {
 
   out.create(height, width, CV_8UC4);
 
-  cv::Mat img;
   GetDIBits(memoryDeviceContext, bitmap, 0, height, out.getMatRef().data, (BITMAPINFO *) &bi, DIB_RGB_COLORS);
+  // remove alpha channel
+  ::cv::cvtColor(out, out, cv::COLOR_BGRA2BGR);
 
   //clean up!
   DeleteObject(bitmap);
