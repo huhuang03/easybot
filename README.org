@@ -1,4 +1,4 @@
-Ok, for now easybot is is a ok name, which means this is a game cv bot lib.
+Ok, for now easybot is is a withOk name, which means this is a game cv bot lib.
 
 And of cause, it's only work on win.
 
