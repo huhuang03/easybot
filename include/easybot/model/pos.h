@@ -10,23 +10,23 @@
 namespace eb {
 
 /**
- * 当前地图的坐标
+ * 我想要可以表示简单位置和带地图名称位置的两种表示方法，怎么设计更好？
  */
 class Pos {
  private:
   int _x;
   int _y;
-  /**
-   * 地图名称
-   * 但是有可能地图重名，遇到再增加一个name吧。
-   */
-  std::string _name;
 
  public:
-  Pos(int x, int y, std::string name);
+  Pos(int x, int y);
   int x() const;;
   int y() const;;
-  std::string name();;
+  bool isNear(const Pos &other, double distance);
+  bool isNear(const Pos &other, int distance);
+  double distance(const Pos &other);
+
+  bool operator==(const Pos &other) const;
+//  friend bool operator==(const Pos &thiz, const Pos &other);
   friend std::ostream &operator<<(std::ostream &os, const Pos &pos);
 };
 
