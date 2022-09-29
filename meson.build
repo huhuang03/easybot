@@ -1,0 +1,1 @@
+project("easy-bot", "cpp", version: "0.0.0")

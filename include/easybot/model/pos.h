@@ -18,7 +18,9 @@ class Pos {
   int _y;
 
  public:
+  static int NO_POS;
   Pos(int x, int y);
+  Pos();
   int x() const;;
   int y() const;;
   bool isNear(const Pos &other, double distance);

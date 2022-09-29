@@ -2,6 +2,11 @@
 // Created by hwf on 2022/1/5.
 //
 #include <easybot/model/pos.h>
+#include <math.h>
+
+int eb::Pos::NO_POS = -1;
+
+eb::Pos::Pos(): _x(NO_POS), _y(NO_POS) {}
 
 eb::Pos::Pos(int x, int y): _x(x), _y(y) {
 }

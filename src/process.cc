@@ -59,15 +59,15 @@ struct EnumWindowsGetWindowsParam {
 //  return 0;
 //}
 
-DWORD getBaseAddr(DWORD processId, const std::string &moduleName) {
+void* getBaseAddr(DWORD processId, const std::string &moduleName) {
   if (processId <= 0) {
-    return 0;
+    return nullptr;
   }
   // ok, let's do the logic
   auto thSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE32 | TH32CS_SNAPMODULE, processId);
   if (!thSnap) {
     std::cout << "why thSnap is empty" << std::endl;
-    return 0;
+    return nullptr;
   }
 
   MODULEENTRY32 me{0};
@@ -75,14 +75,14 @@ DWORD getBaseAddr(DWORD processId, const std::string &moduleName) {
   // need close pe?
   if (!Module32First(thSnap, &me)) {
     CloseHandle(thSnap);
-    return 0;
+    return nullptr;
   }
 
-  DWORD rst = 0;
+  void* rst = nullptr;
   do {
     if (moduleName == me.szModule) {
       CloseHandle(thSnap);
-      rst = reinterpret_cast<DWORD>(me.modBaseAddr);
+      rst = me.modBaseAddr;
       break;
     }
   } while (Module32Next(thSnap, &me));

@@ -27,7 +27,7 @@ struct EnumChildWindowsGetSubWindowsParam {
 };
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-BOOL enumChildWindowsGetSubWindows(HWND hwnd, LPARAM param) {
+BOOL CALLBACK enumChildWindowsGetSubWindows(HWND hwnd, LPARAM param) {
   auto *config = reinterpret_cast<EnumChildWindowsGetSubWindowsParam *>(param);
   config->rst->push_back(eb::Window(hwnd));
   return TRUE;
@@ -48,9 +48,9 @@ static BOOL WINAPI enumWindowGetTopVisibleWindows(HWND hwnd, LPARAM param) {
 }
 
 
-static struct ParamEnumFindWindow {
-  DWORD processId;
-  std::string *windowName;
+struct ParamEnumFindWindow {
+  DWORD processId{};
+  std::string *windowName{};
   HWND *hwnd = nullptr;
 };
 
@@ -98,7 +98,7 @@ static void getMat(HWND hWND, cv::OutputArray out, int scale = 1) {
   bi.biWidth = width;
   bi.biHeight = -height;
   bi.biPlanes = 1;
-  bi.biBitCount = 32;
+  bi.biBitCount = 3 * 8;
   bi.biCompression = BI_RGB;
   bi.biSizeImage = 0; //because no compression
   bi.biXPelsPerMeter = 1; //we
@@ -106,11 +106,11 @@ static void getMat(HWND hWND, cv::OutputArray out, int scale = 1) {
   bi.biClrUsed = 3; //we ^^
   bi.biClrImportant = 4; //still we
 
-  out.create(height, width, CV_8UC4);
+  out.create(height, width, CV_8UC3);
 
   GetDIBits(memoryDeviceContext, bitmap, 0, height, out.getMatRef().data, (BITMAPINFO *) &bi, DIB_RGB_COLORS);
   // remove alpha channel
-  ::cv::cvtColor(out, out, cv::COLOR_BGRA2BGR);
+//  ::cv::cvtColor(out, out, cv::COLOR_BGRA2BGR);
 
   //clean up!
   DeleteObject(bitmap);

@@ -1,5 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
+
 # how did you do this on appveyor?
 #message($ENV{VCPKG_ROOT})
 
@@ -18,5 +19,7 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 project(easybot)
 #message("CMAKE_SIZEOF_VOID_P: ${CMAKE_SIZEOF_VOID_P}")
 
+# ok 32
+message("void_p: ${CMAKE_SIZEOF_VOID_P}")
 add_subdirectory(src)
 add_subdirectory(test EXCLUDE_FROM_ALL)

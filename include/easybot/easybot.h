@@ -8,9 +8,9 @@
 #include "./util/util_keyboard.h"
 #include "./util/util_string.h"
 #include "./util/util_comm.h"
-#include "./window.h"
 #include "./process.h"
 #include "./model/hsv.h"
 #include "./model/hsv_range.h"
 #include "./model/pos.h"
+#include "./window.h"
 #endif //EASYBOT_EASYBOT_H
