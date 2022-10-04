@@ -75,6 +75,9 @@ static BOOL CALLBACK enumFindWindow(HWND hwnd, LPARAM param) {
  * @param scale 有些高分辨率上乘了scale倍
  */
 static void getMat(HWND hWND, cv::OutputArray out, int scale = 1) {
+  if (hWND == nullptr) {
+    return;
+  }
   HDC deviceContext = GetDC(hWND);
   HDC memoryDeviceContext = CreateCompatibleDC(deviceContext);
 

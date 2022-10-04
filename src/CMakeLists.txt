@@ -3,11 +3,11 @@ FILE(GLOB_RECURSE
         ${CMAKE_CURRENT_SOURCE_DIR}/../include/*.h
         ${CMAKE_CURRENT_SOURCE_DIR}/../include/*.hpp)
 
+#add_library(easybot SHARED ${SRC})
 add_library(easybot ${SRC})
 
 find_package(Boost REQUIRED)
 
-# not work?
 target_include_directories(easybot PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include> $<INSTALL_INTERFACE:include>)
 
 find_package(OpenCV REQUIRED)

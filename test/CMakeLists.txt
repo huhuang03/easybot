@@ -3,6 +3,9 @@ set(CMAKE_CXX_STANDARD 11)
 
 find_package(GTest)
 
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
+    cmake_policy(SET CMP0135 NEW)
+endif()
 if(NOT GTest)
     include(FetchContent)
     FetchContent_Declare(
