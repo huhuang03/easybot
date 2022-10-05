@@ -441,3 +441,17 @@ bool eb::Window::isEnable() const {
   return true;
 #endif
 }
+
+void eb::Window::moveCursor(int x, int y) {
+  if (this->wid == nullptr) {
+    return;
+  }
+
+  RECT rect{0};
+  GetWindowRect(this->wid, &rect);
+  SetForegroundWindow(this->wid);
+  SetActiveWindow(this->wid);
+  SetFocus(this->wid);
+  Sleep(300);
+  SetCursorPos(rect.left + x, rect.top + y);
+}

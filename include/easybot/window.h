@@ -36,11 +36,12 @@ class Window {
   std::string className;
   cv::Rect2i rect(bool forceRefresh = false);
   std::vector<eb::Window> getSubWindows();
-  bool isEnable() const;
 
   static void printAllWindow();
 
   static bool findWindow(Window *out, const std::string &windowName);
+
+  void moveCursor(int x, int y);
 
   /**
    * Find first window match the processName and windowName exactly
@@ -55,41 +56,40 @@ class Window {
 
   void refresh();
 
-  // A window that has no parent, or whose parent is the desktop window, is called a top-level window.
-  bool isTopLevel() const;
-
   static std::vector<Window> getTopVisibleWindows();
 
   std::string str() const;
-
-  bool isInScreen() const;
-
-  // https://devblogs.microsoft.com/oldnewthing/20200302-00/?p=103507
-  bool isCloaked() const;
 
   /**
    * @return get title dynamic
    */
   std::string getTitle();
 
-  /**
-   * Why you can't find?
-   */
   void screenshot(cv::OutputArray output, int scale = 1);
 
   friend std::ostream &operator<<(std::ostream &out, const Window &window);
+
+  bool isVisible();
+
+  bool isInScreen() const;
+
+  /**
+   * 是否是Ime之类的不可见窗口。暂时只在windows上判断
+   */
+  bool isImeStaff() const;
+
+  // A window that has no parent, or whose parent is the desktop window, is called a top-level window.
+  bool isTopLevel() const;
 
   /**
    * A normal window means
    */
   bool isNormalWindow();
 
-  bool isVisible();
+  // https://devblogs.microsoft.com/oldnewthing/20200302-00/?p=103507
+  bool isCloaked() const;
 
-  /**
-   * 是否是Ime之类的不可见窗口。暂时旨在windows上判断
-   */
-  bool isImeStaff() const;
+  bool isEnable() const;
 };
 }
 
