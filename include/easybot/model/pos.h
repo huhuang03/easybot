@@ -9,9 +9,6 @@
 
 namespace eb {
 
-/**
- * 我想要可以表示简单位置和带地图名称位置的两种表示方法，怎么设计更好？
- */
 class Pos {
  private:
   int _x;

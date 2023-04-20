@@ -13,4 +13,5 @@
 #include "./model/hsv_range.h"
 #include "./model/pos.h"
 #include "./window.h"
+#include "./mouse/mouse.h"
 #endif //EASYBOT_EASYBOT_H

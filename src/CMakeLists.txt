@@ -4,7 +4,7 @@ FILE(GLOB_RECURSE
         ${CMAKE_CURRENT_SOURCE_DIR}/../include/*.hpp)
 
 #add_library(easybot SHARED ${SRC})
-add_library(easybot ${SRC})
+add_library(easybot ${SRC} ../include/easybot/mouse/mouse.h mouse/mouse.cc)
 
 find_package(Boost REQUIRED)
 
