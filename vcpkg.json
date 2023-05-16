@@ -1,0 +1,7 @@
+{
+  "name": "easybot",
+  "version": "1.0.0",
+  "dependencies": [
+    "opencv"
+  ]
+}

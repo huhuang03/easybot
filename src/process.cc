@@ -35,29 +35,29 @@ struct EnumWindowsGetWindowsParam {
 // * @param processName
 // * @return
 // */
-//DWORD findProcessId(const std::string &processName) {
-//  auto thSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-//  if (!thSnap) {
-//    return 0;
-//  }
-//  PROCESSENTRY32 pe;
-//
-//  // need close pe?
-//  if (!Process32Next(thSnap, &pe)) {
-//    CloseHandle(thSnap);
-//    return 0;
-//  }
-//
-//  do {
-//    if (processName == pe.szExeFile) {
-//      CloseHandle(thSnap);
-//      return pe.th32ProcessID;
-//    }
-//  } while (Process32Next(thSnap, &pe));
-//
-//  CloseHandle(thSnap);
-//  return 0;
-//}
+DWORD findProcessId(const std::string &processName) {
+  auto thSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+  if (!thSnap) {
+    return 0;
+  }
+  PROCESSENTRY32 pe;
+
+  // need close pe?
+  if (!Process32Next(thSnap, &pe)) {
+    CloseHandle(thSnap);
+    return 0;
+  }
+
+  do {
+    if (processName == pe.szExeFile) {
+      CloseHandle(thSnap);
+      return pe.th32ProcessID;
+    }
+  } while (Process32Next(thSnap, &pe));
+
+  CloseHandle(thSnap);
+  return 0;
+}
 
 void* getBaseAddr(DWORD processId, const std::string &moduleName) {
   if (processId <= 0) {

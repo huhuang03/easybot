@@ -27,6 +27,7 @@ function(add_test name)
             gtest_main
             easybot
     )
+    target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
     gtest_discover_tests(${name})
 endfunction()

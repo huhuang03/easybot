@@ -12,7 +12,7 @@ TEST(WindowTest, printAllWindows) {
 }
 
 TEST(WindowTest, snapshot) {
-  auto p = eb::Process::findByName("TextEdit");
+  auto p = eb::Process::findByName("无标题 - 记事本");
   auto window = p.getBiggestWindow();
   cv::Mat mat;
   window.screenshot(mat);

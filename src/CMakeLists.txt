@@ -1,3 +1,6 @@
+add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+
 FILE(GLOB_RECURSE
         SRC *.h *.hpp *.cpp *.cc *.c
         ${CMAKE_CURRENT_SOURCE_DIR}/../include/*.h
@@ -6,12 +9,13 @@ FILE(GLOB_RECURSE
 #add_library(easybot SHARED ${SRC})
 add_library(easybot ${SRC} ../include/easybot/mouse/mouse.h mouse/mouse.cc)
 
-find_package(Boost REQUIRED)
+#find_package(Boost REQUIRED)
 
 target_include_directories(easybot PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include> $<INSTALL_INTERFACE:include>)
 
-find_package(OpenCV REQUIRED)
-target_include_directories(easybot PRIVATE ${OpenCV_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+find_package(OpenCV CONFIG REQUIRED)
+#find_package(OpenCV REQUIRED)
+target_include_directories(easybot PRIVATE ${OpenCV_INCLUDE_DIRS})
 
 target_link_libraries(easybot ${OpenCV_LIBS})
 if(WIN32)
