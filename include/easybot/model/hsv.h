@@ -27,6 +27,9 @@ class HSV {
   static int V_MIN;
   static int V_MAX;
 
+  static HSV min();
+  static HSV max();
+
   // it's good for the public??
  private:
   int _h;
@@ -34,18 +37,18 @@ class HSV {
   int _v;
 
  public:
-  int h() const;
-  int s() const;
-  int v() const;
+  [[nodiscard]] int h() const;
+  [[nodiscard]] int s() const;
+  [[nodiscard]] int v() const;
 
   void setH(int h);
   void setS(int s);
   void setV(int v);
 
-  cv::Scalar toScale() const;
-  cv::Scalar toHMinScale() const;
-  cv::Scalar toHMaxScale() const;
-  cv::Vec3i toVec() const;
+  [[nodiscard]] cv::Scalar toScale() const;
+  [[nodiscard]] cv::Scalar toHMinScale() const;
+  [[nodiscard]] cv::Scalar toHMaxScale() const;
+  [[nodiscard]] cv::Vec3i toVec() const;
 
   friend std::ostream &operator<<(std::ostream &os, const HSV &thiz);
 
@@ -54,4 +57,4 @@ class HSV {
 };
 }
 
-#endif // constPICTOOL_HSV_H
+#endif // PICTOOL_HSV_H
