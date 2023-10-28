@@ -27,8 +27,8 @@ class HSV {
   static int V_MIN;
   static int V_MAX;
 
-  static HSV min();
-  static HSV max();
+  static HSV createMin();
+  static HSV createMax();
 
   // it's good for the public??
  private:
