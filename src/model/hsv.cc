@@ -69,3 +69,11 @@ bool eb::HSV::operator!=(const eb::HSV &other) const {
 cv::Vec3i eb::HSV::toVec() const {
   return {this->_h, this->_s, this->_v};
 }
+
+eb::HSV eb::HSV::createMin() {
+  return {H_MIN, S_MIN, V_MIN};
+}
+
+eb::HSV eb::HSV::createMax() {
+  return {H_MAX, S_MAX, V_MAX};
+}

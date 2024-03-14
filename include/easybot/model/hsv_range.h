@@ -18,10 +18,11 @@ class HSVRange {
 
   // named lower and upper is better?
  public:
+  HSVRange();
   HSVRange(HSV h1, HSV v2);
 
-  HSV h1() const;
-  HSV h2() const;
+  [[nodiscard]] HSV h1() const;
+  [[nodiscard]] HSV h2() const;
 
   /**
    * h是否跨了边界

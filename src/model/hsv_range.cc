@@ -58,3 +58,5 @@ bool eb::HSVRange::operator==(const eb::HSVRange &other) const {
 bool eb::HSVRange::operator!=(const eb::HSVRange &other) const {
   return !(*this == other);
 }
+
+eb::HSVRange::HSVRange(): _h1(HSV::createMin()), _h2(HSV::createMax()) {}
