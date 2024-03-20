@@ -3,19 +3,17 @@
 //
 
 #include <easybot/mouse/mouse.h>
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 
 void eb::smartClick() {
   click();
 }
 
 void eb::click() {
+#ifdef _WIN32
   INPUT Inputs[2] = {0};
-//  Inputs[0].type = INPUT_MOUSE;
-//  Inputs[0].mi.dx = ...; // desired X coordinate
-//  Inputs[0].mi.dy = ...; // desired Y coordinate
-//  Inputs[0].mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE;
-
   Inputs[0].type = INPUT_MOUSE;
   Inputs[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
 
@@ -23,4 +21,5 @@ void eb::click() {
   Inputs[1].mi.dwFlags = MOUSEEVENTF_LEFTUP;
 
   SendInput(sizeof(Inputs) / sizeof(INPUT), Inputs, sizeof(INPUT));
+#endif
 }

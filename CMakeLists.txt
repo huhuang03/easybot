@@ -15,3 +15,9 @@ project(easybot)
 
 add_subdirectory(src)
 add_subdirectory(test EXCLUDE_FROM_ALL)
+
+# ok do the install info
+include(GNUInstallDirs)
+if (BUILD_SHARED_LIBS AND MSVC)
+    target_compile_definitions(easybot PRIVATE MYLIB_EXPORTS)
+endif ()

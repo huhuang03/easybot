@@ -1,4 +1,6 @@
-This is a util library for 
+@Deprecated. This package is being replaced by cvbot.
+
+This is a util library for
 
 * Links
 ** mac snapshot window
