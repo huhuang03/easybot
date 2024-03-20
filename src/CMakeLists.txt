@@ -46,23 +46,8 @@ NAMESPACE easybot::
 DESTINATION share/easybot)
 
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/easybot-config.cmake"
+"include(CMakeFindDependencyMacro)\n"
+"find_dependency(opencv CONFIG REQUIRED)\n"
 "include(\"\${CMAKE_CURRENT_LIST_DIR}/easybot-targets.cmake\")\n")
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/easybot-config.cmake"
     DESTINATION share/easybot)
-## can this emmit?
-## how to let cmakeTargets see this include?
-#install(DIRECTORY ../include/easybot DESTINATION ../include)
-#
-#include(CMakePackageConfigHelpers)
-## generate the config file that is includes the exports
-#configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-#        "${CMAKE_CURRENT_BINARY_DIR}/easybotConfig.cmake"
-#        INSTALL_DESTINATION "lib/cmake/easybot"
-#        NO_SET_AND_CHECK_MACRO
-#        NO_CHECK_REQUIRED_COMPONENTS_MACRO
-#        )
-#
-## install the configuration file
-#install(FILES
-#        ${CMAKE_CURRENT_BINARY_DIR}/easybotConfig.cmake
-#        DESTINATION lib/cmake/easybot)
