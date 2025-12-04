@@ -10,9 +10,6 @@
 
 namespace eb {
 class HSVRange {
- private:
-  // use pointer look like good, but I don't want
-  // to do like this.
   HSV _h1;
   HSV _h2;
 

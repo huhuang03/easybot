@@ -1,5 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
+# how to fix the clion auto set env??
+message("$ENV{VCPKG_ROOT}")
+
 if(NOT DEFINED ENV{VCPKG_ROOT})
     message(Please set the vcpkg_root env)
 else()
