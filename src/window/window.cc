@@ -443,10 +443,10 @@ bool eb::Window::isEnable() const {
 }
 
 void eb::Window::moveCursor(int x, int y) {
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   if (this->wid == nullptr) {
     return;
   }
-
   RECT rect{0};
   GetWindowRect(this->wid, &rect);
   SetForegroundWindow(this->wid);
@@ -454,4 +454,5 @@ void eb::Window::moveCursor(int x, int y) {
   SetFocus(this->wid);
   Sleep(300);
   SetCursorPos(rect.left + x, rect.top + y);
+#endif
 }

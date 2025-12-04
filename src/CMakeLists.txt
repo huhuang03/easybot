@@ -26,22 +26,28 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 # install target
-install(TARGETS easybot DESTINATION lib EXPORT easybotTargets)
-install(EXPORT easybotTargets FILE easybotTargets.cmake DESTINATION lib/cmake/easybot)
-# can this emmit?
-# how to let cmakeTargets see this include?
-install(DIRECTORY ../include/easybot DESTINATION ../include)
+# ok do the install info
+include(GNUInstallDirs)
+if (BUILD_SHARED_LIBS AND MSVC)
+    target_compile_definitions(easybot PRIVATE MYLIB_EXPORTS)
+endif ()
+install(TARGETS easybot
+        EXPORT easybot_targets
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
 
-include(CMakePackageConfigHelpers)
-# generate the config file that is includes the exports
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-        "${CMAKE_CURRENT_BINARY_DIR}/easybotConfig.cmake"
-        INSTALL_DESTINATION "lib/cmake/easybot"
-        NO_SET_AND_CHECK_MACRO
-        NO_CHECK_REQUIRED_COMPONENTS_MACRO
-        )
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/" DESTINATION include)
 
-# install the configuration file
-install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/easybotConfig.cmake
-        DESTINATION lib/cmake/easybot)
+install(EXPORT easybot_targets
+FILE easybot-targets.cmake
+NAMESPACE easybot::
+DESTINATION share/easybot)
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/easybot-config.cmake"
+"include(CMakeFindDependencyMacro)\n"
+"find_dependency(opencv CONFIG REQUIRED)\n"
+"include(\"\${CMAKE_CURRENT_LIST_DIR}/easybot-targets.cmake\")\n")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/easybot-config.cmake"
+    DESTINATION share/easybot)
