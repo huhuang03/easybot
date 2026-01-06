@@ -25,9 +25,9 @@ class HSVRange {
    * h是否跨了边界
    * @return
    */
-  bool isHCrossBoundary();
+  bool isHCrossBoundary() const;
 
-  void work(cv::InputArray in, cv::OutputArray out);
+  void work(cv::InputArray in, cv::OutputArray out) const;
 
   friend std::ostream &operator<<(std::ostream &os, const HSVRange &thiz);
 

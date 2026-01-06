@@ -10,15 +10,12 @@ eb::HSVRange::HSVRange(HSV h1, HSV h2) {
   this->_h2 = h2;
 }
 
-// why this effect in?
-void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
-  // ok, let's do something.
+void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) const {
   cv::Mat hsv;
   cv::cvtColor(in, hsv, cv::COLOR_BGR2HSV);
 
   cv::Mat mask;
   if (!this->isHCrossBoundary()) {
-//    std::cout << "_h1: " << this->_h1.toVec() << ", _h2: " << this->_h2.toVec()  << std::endl;
     cv::inRange(hsv, this->_h1.toVec(), this->_h2.toVec(), mask);
   } else {
     cv::Mat mask1;
@@ -33,7 +30,7 @@ void eb::HSVRange::work(cv::InputArray in, cv::OutputArray out) {
   cv::bitwise_and(in, in, out, mask);
 }
 
-bool eb::HSVRange::isHCrossBoundary() {
+bool eb::HSVRange::isHCrossBoundary() const {
   return this->_h1.h() > this->_h2.h();
 }
 
